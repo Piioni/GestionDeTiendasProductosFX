@@ -245,9 +245,7 @@ public class VentanaProductos {
         imageViewConfig.setFitHeight(45);
         imageViewConfig.setPreserveRatio(true);
 
-        imageViewConfig.setOnMouseClicked(e -> {
-            MainApp.MostrarConfiguracion();
-        });
+        imageViewConfig.setOnMouseClicked(e -> MainApp.MostrarConfiguracion());
 
         // Change the cursor to hand when hovering over the image
         imageViewConfig.setOnMouseEntered(e -> imageViewConfig.setCursor(Cursor.HAND));
@@ -285,9 +283,11 @@ public class VentanaProductos {
         String cantidadStr = txtCantidad.getText();
         String precioStr = txtPrecio.getText();
         String descripcion = txtDescripcion.getText();
+        String categoria = cbCategoria.getValue();
+        System.out.println(categoria);
 
         // Verificar que los campos no estén vacíos
-        if (codigo.isEmpty() || nombre.isEmpty() || cantidadStr.isEmpty() || precioStr.isEmpty() || descripcion.isEmpty()) {
+        if (codigo.isEmpty() || nombre.isEmpty() || cantidadStr.isEmpty() || precioStr.isEmpty() || descripcion.isEmpty() || categoria == null) {
             mostrarAlerta("Todos los campos son obligatorios.");
             return;
         }
@@ -297,8 +297,11 @@ public class VentanaProductos {
             return;
         }
         // Verificar que el codigo cumpla la siguiente expresion regular (2 o 3 letras mayúsculas seguidas de 1 número)
-        if (!codigo.matches("[A-Z]{2,3}\\d{1,2}") || codigo.length() < 3 || codigo.length() > 6) {
+        if (!codigo.matches("[A-Z]{2,3}\\d{1,2}") ) {
             mostrarAlerta("El código debe contener 2 o 3 letras mayúsculas seguidas de 1 número.");
+            return;
+        } else if (codigo.length() < 3 || codigo.length() > 6) {
+            mostrarAlerta("El código debe tener entre 3 y 6 caracteres.");
             return;
         }
 
@@ -312,7 +315,6 @@ public class VentanaProductos {
             mostrarAlerta("Cantidad y precio deben ser valores numéricos.");
             return;
         }
-        String categoria = cbCategoria.getValue();
 
         Producto p = new Producto(codigo, nombre, precio, cantidad, descripcion, categoria);
         tienda.addProduct(p);

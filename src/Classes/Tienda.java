@@ -33,11 +33,6 @@ public class Tienda implements Iterable<Producto> {
         Iterable.super.forEach(action);
     }
 
-    @Override
-    public Spliterator<Producto> spliterator() {
-        return Iterable.super.spliterator();
-    }
-
     public void addProduct(Producto p) {
         listaProductos.add(p);
     }
