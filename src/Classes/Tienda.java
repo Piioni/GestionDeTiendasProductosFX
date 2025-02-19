@@ -12,7 +12,7 @@ public class Tienda implements Iterable<Producto> {
     private String descripcion = "Tienda de productos varios!";
     private final List<Producto> listaProductos;
 
-    public Tienda(String descripcion, String direccion, String nombre) {
+    public Tienda(String nombre, String direccion, String descripcion) {
         this.descripcion = descripcion;
         this.direccion = direccion;
         this.nombre = nombre;
@@ -79,5 +79,17 @@ public class Tienda implements Iterable<Producto> {
 
     public int size() {
         return listaProductos.size();
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public void setDireccion(String direccion) {
+        this.direccion = direccion;
+    }
+
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
     }
 }

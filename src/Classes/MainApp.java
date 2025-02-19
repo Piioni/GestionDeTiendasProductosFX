@@ -50,7 +50,7 @@ public class MainApp extends Application {
     }
 
     public static void MostrarConfiguracion() {
-        Configurator configurator = new Configurator(primaryStage, tienda);
+        Configurator configurator = new Configurator(tienda);
         Scene escena = configurator.getScene();
         cambiarEscenaTransicion(primaryStage, escena);
         ajustarPantalla(primaryStage, configurator.getScene());
@@ -199,6 +199,10 @@ public class MainApp extends Application {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public static Path getPath() {
+        return PATH;
     }
 
     public static void setPath(Path path) {
