@@ -138,3 +138,12 @@
     -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.3), 5, 0, 0, 2);
 }
 
+/* tooltip.css */
+.tooltip {
+    -fx-background-color: #333;
+    -fx-text-fill: white;
+    -fx-font-size: 12px;
+    -fx-padding: 5px;
+    -fx-border-radius: 5px;
+    -fx-background-radius: 5px;
+}

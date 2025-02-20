@@ -77,10 +77,28 @@ public class VentanaProductos {
         Label lblCategoria = new Label("Category");
         lblCategoria.getStyleClass().add("label");
         cbCategoria = new ComboBox<>();
-        cbCategoria.setMaxWidth(250);
+        cbCategoria.setPrefWidth(250);
         cbCategoria.getItems().addAll("Electronics", "Clothing", "Food", "Books", "Other");
         cbCategoria.getStyleClass().add("combo-box"); // Add this line to apply the CSS class
 
+        // Crear la imagen
+        Image imageFind = new Image("file:src/Images/find.png", 20, 20, true, true);
+        ImageView imageViewFind = new ImageView(imageFind);
+
+        // Change the cursor to hand when hovering over the image
+        imageViewFind.setOnMouseEntered(e -> imageViewFind.setCursor(Cursor.HAND));
+        imageViewFind.setOnMouseExited(e -> imageViewFind.setCursor(Cursor.DEFAULT));
+
+        // Create a tooltip and set its text
+        Tooltip tooltipFind = new Tooltip("Click to search by category");
+        tooltipFind.setShowDelay(javafx.util.Duration.millis(100));
+        Tooltip.install(imageViewFind, tooltipFind);
+
+        imageViewFind.setOnMouseClicked(e -> buscarPorCategoria());
+
+        // Crear un HBox para contener el ComboBox y la ImageView
+        HBox hBoxCategoria = new HBox(5); // 5 es el espacio entre el ComboBox y la ImageView
+        hBoxCategoria.getChildren().addAll(cbCategoria, imageViewFind);
 
         // Añadir labels y textfields al GridPane
         panelCampos.add(lblCodigo, 0, 0);
@@ -94,7 +112,7 @@ public class VentanaProductos {
         panelCampos.add(lblDescripcion, 0, 4);
         panelCampos.add(txtDescripcion, 1, 4);
         panelCampos.add(lblCategoria, 0, 5);
-        panelCampos.add(cbCategoria, 1, 5);
+        panelCampos.add(hBoxCategoria, 1, 5);
 
         // Panel para la imagen y el titulo
         VBox panelSuperiorderecho = new VBox();
@@ -121,12 +139,6 @@ public class VentanaProductos {
 
         // Load the imageLogo
         Image imageLogo = new Image(imagePath, true);
-        if (imageLogo.isError()) {
-            System.out.println("Error loading imageLogo: " + imageLogo.getException().getMessage());
-            imageLogo.getException().printStackTrace();
-        } else {
-            System.out.println("Image loaded successfully.");
-        }
 
         ImageView imageView = new ImageView(imageLogo);
         imageView.setFitWidth(170);
@@ -233,13 +245,6 @@ public class VentanaProductos {
 
         // Load the image
         Image imageConfig = new Image("file:src/Images/config.png", true);
-        if (imageConfig.isError()) {
-            System.out.println("Error loading image: " + imageConfig.getException().getMessage());
-            imageConfig.getException().printStackTrace();
-        } else {
-            System.out.println("Image loaded successfully.");
-        }
-
         ImageView imageViewConfig = new ImageView(imageConfig);
         imageViewConfig.setFitWidth(45);
         imageViewConfig.setFitHeight(45);
@@ -253,6 +258,7 @@ public class VentanaProductos {
 
         // Create a tooltip and set its text
         Tooltip tooltip = new Tooltip("Click to configure settings");
+        tooltip.setShowDelay(javafx.util.Duration.millis(100));
         Tooltip.install(imageViewConfig, tooltip);
 
         panelBotonConfiguracion.getChildren().add(imageViewConfig);
@@ -275,7 +281,6 @@ public class VentanaProductos {
 
     }
 
-    // metodos de los botones
     private void agregarProducto() {
         // Obtener los valores de los textfields
         String codigo = txtCodigo.getText();
@@ -284,7 +289,6 @@ public class VentanaProductos {
         String precioStr = txtPrecio.getText();
         String descripcion = txtDescripcion.getText();
         String categoria = cbCategoria.getValue();
-        System.out.println(categoria);
 
         // Verificar que los campos no estén vacíos
         if (codigo.isEmpty() || nombre.isEmpty() || cantidadStr.isEmpty() || precioStr.isEmpty() || descripcion.isEmpty() || categoria == null) {
@@ -339,8 +343,9 @@ public class VentanaProductos {
         String cantidadStr = txtCantidad.getText();
         String precioStr = txtPrecio.getText();
         String descripcion = txtDescripcion.getText();
+        String categoria = cbCategoria.getValue();
 
-        if (codigo.isEmpty() && nombre.isEmpty() && cantidadStr.isEmpty() && precioStr.isEmpty() && descripcion.isEmpty()) {
+        if (codigo.isEmpty() && nombre.isEmpty() && cantidadStr.isEmpty() && precioStr.isEmpty() && descripcion.isEmpty() && categoria == null) {
             mostrarAlerta("Por favor, llene al menos un campo para buscar.");
             return;
         }
@@ -348,17 +353,13 @@ public class VentanaProductos {
         lista.getItems().clear();
 
         // Recorrer la lista de productos
-        for (Producto p : tienda.getListaProductos()) {
+        for (Producto p : tienda) {
             // Inicializa el match a true
             boolean match = true;
 
             // Verificar si los campos de búsqueda no están vacíos y si coinciden con los valores del producto
-            if (!codigo.isEmpty() && !p.getCodigo().equals(codigo)) {
-                match = false;
-            }
-            if (!nombre.isEmpty() && !p.getNombre().equals(nombre)) {
-                match = false;
-            }
+            if (!codigo.isEmpty() && !p.getCodigo().equals(codigo)) match = false;
+            if (!nombre.isEmpty() && !p.getNombre().equals(nombre)) match = false;
             if (!cantidadStr.isEmpty()) {
                 try {
                     int cantidad = Integer.parseInt(cantidadStr);
@@ -385,6 +386,10 @@ public class VentanaProductos {
                 match = false;
             }
 
+            if (categoria != null && !p.getCategoria().equals(categoria)) {
+                match = false;
+            }
+
             if (match) {
                 lista.getItems().add(p.toString());
                 txtCodigo.setText(p.getCodigo());
@@ -392,6 +397,7 @@ public class VentanaProductos {
                 txtCantidad.setText(String.valueOf(p.getCantidad()));
                 txtPrecio.setText(String.valueOf(p.getPrecio()));
                 txtDescripcion.setText(p.getDescripcion());
+                cbCategoria.setValue(p.getCategoria());
                 return;
             }
         }
@@ -401,6 +407,26 @@ public class VentanaProductos {
         }
 
 
+    }
+
+    private void buscarPorCategoria() {
+        String categoria = cbCategoria.getValue();
+        if (categoria == null) {
+            mostrarAlerta("Seleccione una categoría para buscar.");
+            return;
+        }
+
+        lista.getItems().clear();
+
+        for (Producto p : tienda) {
+            if (p.getCategoria().equals(categoria)) {
+                imprimirProducto(p);
+            }
+        }
+
+        if (lista.getItems().isEmpty()) {
+            mostrarAlerta("No se encontraron productos en la categoría seleccionada.");
+        }
     }
 
     private void eliminarProducto() {
@@ -510,7 +536,7 @@ public class VentanaProductos {
 
     private void mostrarProductos() {
         lista.getItems().clear();
-        for (Producto p : tienda.getListaProductos()) {
+        for (Producto p : tienda) {
             // Print and add each product to the list
             imprimirProducto(p);
         }

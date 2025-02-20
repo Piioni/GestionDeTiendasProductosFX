@@ -77,20 +77,11 @@ public class Configurator {
 
         // Load the imageLogo
         Image imageLogo = new Image(imagePath, true);
-        if (imageLogo.isError()) {
-            System.out.println("Error loading imageLogo: " + imageLogo.getException().getMessage());
-            imageLogo.getException().printStackTrace();
-        } else {
-            System.out.println("Image loaded successfully.");
-        }
-
         ImageView imageView = new ImageView(imageLogo);
         imageView.setFitWidth(170);
         imageView.setFitHeight(170);
         imageView.setPreserveRatio(true);
         panelImagen.getChildren().add(imageView);
-
-
 
         // Panel inferior para los botones
         HBox panelInferiorConf = new HBox(100);

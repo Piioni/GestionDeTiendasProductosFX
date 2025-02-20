@@ -28,11 +28,6 @@ public class Tienda implements Iterable<Producto> {
         return listaProductos.iterator();
     }
 
-    @Override
-    public void forEach(Consumer<? super Producto> action) {
-        Iterable.super.forEach(action);
-    }
-
     public void addProduct(Producto p) {
         listaProductos.add(p);
     }
@@ -56,14 +51,13 @@ public class Tienda implements Iterable<Producto> {
         return null;
     }
 
-    public Producto[] getListaProductos() {
-        return listaProductos.toArray(new Producto[0]);
-    }
-
     public void clear() {
         listaProductos.clear();
     }
 
+    public int size() {
+        return listaProductos.size();
+    }
 
     public String getNombre() {
         return nombre;
@@ -75,10 +69,6 @@ public class Tienda implements Iterable<Producto> {
 
     public String getDescripcion() {
         return descripcion;
-    }
-
-    public int size() {
-        return listaProductos.size();
     }
 
     public void setNombre(String nombre) {
