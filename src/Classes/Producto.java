@@ -19,7 +19,7 @@ public class Producto implements Comparable<Producto> {
 
     @Override
     public int compareTo(Producto o) {
-        return this.codigo.compareTo(o.codigo);
+        return this.categoria.compareTo(o.categoria) == 0 ? this.codigo.compareTo(o.codigo) : this.categoria.compareTo(o.categoria);
     }
 
     public String toString() {
@@ -27,7 +27,9 @@ public class Producto implements Comparable<Producto> {
                 "Nombre: " + nombre + "\n" +
                 "Precio: " + precio + "\n" +
                 "Cantidad: " + cantidad + "\n" +
-                "Descripción: " + descripcion + "\n";
+                "Descripción: " + descripcion + "\n" +
+                "Categoría: " + categoria + "\n";
+
     }
 
     // Getters
