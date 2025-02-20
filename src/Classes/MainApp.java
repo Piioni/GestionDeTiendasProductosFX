@@ -24,6 +24,9 @@ public class MainApp extends Application {
     private static Stage primaryStage;
     private static Tienda tienda;
     private static Path PATH ;
+    private static Scene sceneMenuPrincipal;
+    private static Scene sceneProductos;
+    private static Scene sceneConfiguracion;
 
 
     @Override
@@ -31,29 +34,36 @@ public class MainApp extends Application {
         MainApp.primaryStage = primaryStage;
         MainApp.tienda = new Tienda();
         primaryStage.setTitle("Main Menu");
+        primaryStage.setResizable(false);
+
+        MenuPrincipal menuPrincipal = new MenuPrincipal(primaryStage, tienda);
+        sceneMenuPrincipal = menuPrincipal.getScene();
+
+        VentanaProductos ventanaProductos = new VentanaProductos(tienda, PATH);
+        sceneProductos = ventanaProductos.getScene();
+
+        Configurator configurator = new Configurator(tienda);
+        sceneConfiguracion = configurator.getScene();
 
         mostrarMenuPrincipal();
     }
 
     public static void mostrarMenuPrincipal() {
-        MenuPrincipal menuPrincipal = new MenuPrincipal(primaryStage, tienda);
-        primaryStage.setScene(menuPrincipal.getScene());
-        ajustarPantalla(primaryStage, menuPrincipal.getScene());
+        primaryStage.setScene(sceneMenuPrincipal);
+        ajustarPantalla(primaryStage, sceneMenuPrincipal);
         primaryStage.show();
     }
 
     public static void mostrarVentanaProductos() {
-        VentanaProductos ventanaProductos = new VentanaProductos(tienda, PATH);
-        Scene escena = ventanaProductos.getScene();
-        cambiarEscenaTransicion(primaryStage, escena);
-        ajustarPantalla(primaryStage, ventanaProductos.getScene());
+        primaryStage.setScene(sceneProductos);
+        ajustarPantalla(primaryStage, sceneProductos);
+        primaryStage.show();
     }
 
     public static void MostrarConfiguracion() {
-        Configurator configurator = new Configurator(tienda);
-        Scene escena = configurator.getScene();
-        cambiarEscenaTransicion(primaryStage, escena);
-        ajustarPantalla(primaryStage, configurator.getScene());
+        primaryStage.setScene(sceneConfiguracion);
+        ajustarPantalla(primaryStage, sceneConfiguracion);
+        primaryStage.show();
     }
 
 
@@ -63,23 +73,6 @@ public class MainApp extends Application {
         double coordenadaY = (pantalla.getHeight()- escena.getHeight())/2;
         primaryStage.setX(coordenadaX);
         primaryStage.setY(coordenadaY - 15);
-    }
-
-    private static void cambiarEscenaTransicion(Stage stage, Scene escena) {
-        FadeTransition fadeOut = new FadeTransition(Duration.millis(10), primaryStage.getScene().getRoot());
-        fadeOut.setFromValue(1.0);
-        fadeOut.setToValue(0.0);
-
-        fadeOut.setOnFinished(event -> {
-            stage.setScene(escena);
-
-            FadeTransition fadeIn = new FadeTransition(Duration.millis(250), escena.getRoot());
-            fadeIn.setFromValue(0.0);
-            fadeIn.setToValue(1.0);
-            fadeIn.play();
-        });
-
-        fadeOut.play();
     }
 
     public static Tienda cargarProductosXML(Path path){

@@ -71,6 +71,7 @@ public class Producto implements Comparable<Producto> {
         this.descripcion = descripcion;
     }
 
-
-
+    public void setCategoria(String categoria) {
+        this.categoria = categoria;
+    }
 }

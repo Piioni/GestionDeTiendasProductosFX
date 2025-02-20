@@ -14,6 +14,9 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
 public class Configurator {
+    TextField txtNombreConf;
+    TextField txtDireccionConf;
+    TextField txtDescripcionConf;
     private Tienda tienda;
 
     public Configurator( Tienda tienda) {
@@ -25,7 +28,6 @@ public class Configurator {
         // Panel superior para los campos de texto
         VBox panelSuperiorConf = new VBox(5);
         panelSuperiorConf.setPadding(new javafx.geometry.Insets(80, 0, 5, 0));
-
 
         // Panel para los labels y textfields
         GridPane panelCamposConf = new GridPane();
@@ -45,9 +47,9 @@ public class Configurator {
         lblDescripcion.getStyleClass().add("label");
 
         // Inicialización de los campos de texto
-        TextField txtNombreConf = new TextField(); // Inicializar la variable de instancia
-        TextField txtDireccionConf = new TextField(); // Inicializar la variable de instancia
-        TextField txtDescripcionConf = new TextField(); // Inicializar la variable de instancia
+        txtNombreConf = new TextField(); // Inicializar la variable de instancia
+        txtDireccionConf = new TextField(); // Inicializar la variable de instancia
+        txtDescripcionConf = new TextField(); // Inicializar la variable de instancia
 
         // Configuración de los campos de texto
         txtNombreConf.setPrefWidth(250);
@@ -103,30 +105,7 @@ public class Configurator {
         Button btnGuardarConf = new Button("Guardar Cambios");
         btnGuardarConf.getStyleClass().add("button");
         btnGuardarConf.setPrefWidth(150);
-        btnGuardarConf.setOnAction(e -> {
-            String nombre = txtNombreConf.getText().trim();
-            String direccion = txtDireccionConf.getText().trim();
-            String descripcion = txtDescripcionConf.getText().trim();
-
-            // Debugging: Print the values of the text fields
-            System.out.println("Nombre: " + nombre);
-            System.out.println("Direccion: " + direccion);
-            System.out.println("Descripcion: " + descripcion);
-
-            // Validar que los campos no estén vacíos
-            if (nombre.isEmpty() || direccion.isEmpty() || descripcion.isEmpty()) {
-                mostrarAlerta("Por favor, complete todos los campos.");
-            } else {
-                if (MainApp.getPath() != null) {
-                    tienda.setNombre(nombre);
-                    tienda.setDireccion(direccion);
-                    tienda.setDescripcion(descripcion);
-                    MainApp.guardarProductosXML(tienda, MainApp.getPath());
-                } else {
-                    mostrarAlerta("No se ha cargado ningún archivo XML.");
-                }
-            }
-        });
+        btnGuardarConf.setOnAction(e -> guardarDatos());
 
         Button btnLimpiarConf = new Button("Limpiar Campos");
         btnLimpiarConf.getStyleClass().add("button");
@@ -155,6 +134,31 @@ public class Configurator {
         scene.getStylesheets().add("file:src/Styles/StylesConfiguracion.css");
 
         return scene;
+    }
+
+    private void guardarDatos() {
+        String nombre = txtNombreConf.getText().trim();
+        String direccion = txtDireccionConf.getText().trim();
+        String descripcion = txtDescripcionConf.getText().trim();
+
+        // Debugging: Print the values of the text fields
+        System.out.println("Nombre: " + nombre);
+        System.out.println("Direccion: " + direccion);
+        System.out.println("Descripcion: " + descripcion);
+
+        // Validar que los campos no estén vacíos
+        if (nombre.isEmpty() || direccion.isEmpty() || descripcion.isEmpty()) {
+            mostrarAlerta("Por favor, complete todos los campos.");
+        } else {
+            if (MainApp.getPath() != null) {
+                tienda.setNombre(nombre);
+                tienda.setDireccion(direccion);
+                tienda.setDescripcion(descripcion);
+                MainApp.guardarProductosXML(tienda, MainApp.getPath());
+            } else {
+                mostrarAlerta("No se ha cargado ningún archivo XML.");
+            }
+        }
     }
 
     private void mostrarAlerta(String mensaje) {

@@ -424,9 +424,10 @@ public class VentanaProductos {
         String cantidadStr = txtCantidad.getText();
         String precioStr = txtPrecio.getText();
         String descripcion = txtDescripcion.getText();
+        String categoria = cbCategoria.getValue();
 
         // Verificar que los campos no estén vacíos
-        if (codigo.isEmpty() || nombre.isEmpty() || cantidadStr.isEmpty() || precioStr.isEmpty() || descripcion.isEmpty()) {
+        if (codigo.isEmpty() || nombre.isEmpty() || cantidadStr.isEmpty() || precioStr.isEmpty() || descripcion.isEmpty() || categoria == null) {
             mostrarAlerta("Todos los campos son obligatorios.");
             return;
         }
@@ -452,6 +453,7 @@ public class VentanaProductos {
             p.setCantidad(cantidad);
             p.setPrecio(precio);
             p.setDescripcion(descripcion);
+            p.setCategoria(categoria);
 
             // Actualizar la lista
             lista.getItems().clear();
