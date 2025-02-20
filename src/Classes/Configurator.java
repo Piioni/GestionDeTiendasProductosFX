@@ -12,12 +12,15 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.stage.FileChooser;
+
+import java.io.File;
 
 public class Configurator {
     TextField txtNombreConf;
     TextField txtDireccionConf;
     TextField txtDescripcionConf;
-    private Tienda tienda;
+    private final Tienda tienda;
 
     public Configurator( Tienda tienda) {
         this.tienda = tienda;
@@ -71,12 +74,8 @@ public class Configurator {
         panelImagen.setAlignment(Pos.CENTER);
         panelImagen.setPadding(new Insets(20, 0, 0, 0));
 
-        // Debugging: Print the imageLogo path
-        String imagePath = "file:src/Images/product.png";
-        System.out.println("Loading imageLogo from: " + imagePath);
-
         // Load the imageLogo
-        Image imageLogo = new Image(imagePath, true);
+        Image imageLogo = new Image("file:src/Images/product.png", true);
         ImageView imageView = new ImageView(imageLogo);
         imageView.setFitWidth(170);
         imageView.setFitHeight(170);
@@ -147,7 +146,41 @@ public class Configurator {
                 tienda.setDescripcion(descripcion);
                 MainApp.guardarProductosXML(tienda, MainApp.getPath());
             } else {
-                mostrarAlerta("No se ha cargado ningún archivo XML.");
+                mostrarAlerta("No se ha cargado ningún archivo XML, seleccione un archivo primero.");
+                // Permite al usuario seleccionar la ubicación para guardar el archivo
+                FileChooser fileChooser = new FileChooser();
+                fileChooser.setTitle("Guardar Archivo");
+
+                FileChooser.ExtensionFilter extFilter = new FileChooser.
+                        ExtensionFilter("Archivos XML (*.xml)", "*.xml");
+                fileChooser.getExtensionFilters().add(extFilter);
+
+                File file = fileChooser.showSaveDialog(null);
+                if (file != null) {
+                    try {
+                        // Asegurarse de que el archivo tenga la extensión .json
+                        if (!file.getPath().endsWith(".xml")) {
+                            file = new File(file.getPath() + ".xml");
+                        }
+
+                        tienda.setNombre(nombre);
+                        tienda.setDireccion(direccion);
+                        tienda.setDescripcion(descripcion);
+                        // Guardar la lista de productos en un archivo JSON
+                        MainApp.guardarProductosXML(tienda, file.toPath());
+                        mostrarAlerta("Cambios guardados correctamente.");
+                        System.out.println("Guardado en: " + file.getAbsolutePath());
+                        MainApp.recargarVentanaProductos();
+
+                    } catch (SecurityException e) {
+                        mostrarAlerta("Permiso denegado: " + e.getMessage());
+                    } catch (Exception e) {
+                        mostrarAlerta("Error inesperado: " + e.getMessage());
+                    }
+                } else {
+                    mostrarAlerta("Por favor, seleccione una ubicación para guardar el archivo.");
+                }
+
             }
         }
     }
@@ -155,7 +188,7 @@ public class Configurator {
     private void mostrarAlerta(String mensaje) {
         // Crear una alerta para mostrar un mensaje de error
         Alert alerta = new Alert(Alert.AlertType.ERROR);
-        alerta.setTitle("Error");
+        alerta.setTitle("Warning");
         alerta.setHeaderText(null);
         alerta.setContentText(mensaje);
         alerta.showAndWait();

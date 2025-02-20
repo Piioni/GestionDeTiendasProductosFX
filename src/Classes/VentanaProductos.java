@@ -85,20 +85,30 @@ public class VentanaProductos {
         Image imageFind = new Image("file:src/Images/find.png", 20, 20, true, true);
         ImageView imageViewFind = new ImageView(imageFind);
 
-        // Change the cursor to hand when hovering over the image
-        imageViewFind.setOnMouseEntered(e -> imageViewFind.setCursor(Cursor.HAND));
-        imageViewFind.setOnMouseExited(e -> imageViewFind.setCursor(Cursor.DEFAULT));
+        // Crear un Region para aumentar la hitbox
+        Region hitbox = new Region();
+        hitbox.setPrefSize(30, 30); // Tamaño de la hitbox cuadrada
+        hitbox.setStyle("-fx-background-color: transparent;"); // Hacer la hitbox transparente
 
-        // Create a tooltip and set its text
+        // Crear un StackPane para contener la imagen y la hitbox
+        StackPane stackPane = new StackPane();
+        stackPane.getChildren().addAll(hitbox, imageViewFind);
+
+        // Cambiar el cursor a mano cuando se pasa sobre la imagen
+        stackPane.setOnMouseEntered(e -> stackPane.setCursor(Cursor.HAND));
+        stackPane.setOnMouseExited(e -> stackPane.setCursor(Cursor.DEFAULT));
+
+        // Crear un Tooltip y establecer su texto
         Tooltip tooltipFind = new Tooltip("Click to search by category");
         tooltipFind.setShowDelay(javafx.util.Duration.millis(100));
-        Tooltip.install(imageViewFind, tooltipFind);
+        Tooltip.install(stackPane, tooltipFind);
 
-        imageViewFind.setOnMouseClicked(e -> buscarPorCategoria());
+        stackPane.setOnMouseClicked(e -> buscarPorCategoria());
 
-        // Crear un HBox para contener el ComboBox y la ImageView
-        HBox hBoxCategoria = new HBox(5); // 5 es el espacio entre el ComboBox y la ImageView
-        hBoxCategoria.getChildren().addAll(cbCategoria, imageViewFind);
+        // Crear un HBox para contener el ComboBox y el StackPane
+        HBox hBoxCategoria = new HBox(5); // 5 es el espacio entre el ComboBox y el StackPane
+        hBoxCategoria.getChildren().addAll(cbCategoria, stackPane);
+
 
         // Añadir labels y textfields al GridPane
         panelCampos.add(lblCodigo, 0, 0);
@@ -133,19 +143,14 @@ public class VentanaProductos {
         panelImagen.setAlignment(Pos.CENTER);
         panelImagen.setPadding(new Insets(20, 0, 0, 0));
 
-        // Debugging: Print the imageLogo path
-        String imagePath = "file:src/Images/product.png";
-        System.out.println("Loading imageLogo from: " + imagePath);
-
         // Load the imageLogo
-        Image imageLogo = new Image(imagePath, true);
+        Image imageLogo = new Image("file:src/Images/product.png", true);
 
         ImageView imageView = new ImageView(imageLogo);
         imageView.setFitWidth(170);
         imageView.setFitHeight(170);
         imageView.setPreserveRatio(true);
         panelImagen.getChildren().add(imageView);
-
 
         // Añadir el panel de la imagen al container superior
         panelSuperiorderecho.getChildren().addAll(panelTitulo, panelImagen);

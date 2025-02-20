@@ -1,11 +1,9 @@
 package Classes;
 
-import javafx.animation.FadeTransition;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
-import javafx.util.Duration;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -116,11 +114,21 @@ public class MainApp extends Application {
                 tienda.addProduct(producto);
             }
 
+            VentanaProductos ventanaProductos = new VentanaProductos(tienda, path);
+            sceneProductos = ventanaProductos.getScene();
+            Configurator configurator = new Configurator(tienda);
+            sceneConfiguracion = configurator.getScene();
 
         } catch (ParserConfigurationException | IOException | SAXException e) {
             throw new RuntimeException(e);
         }
         return tienda;
+    }
+
+    public static void recargarVentanaProductos(){
+        VentanaProductos ventanaProductos = new VentanaProductos(tienda, PATH);
+        sceneProductos = ventanaProductos.getScene();
+        mostrarVentanaProductos();
     }
 
     public static void guardarProductosXML(Tienda tienda, Path path){
@@ -186,6 +194,9 @@ public class MainApp extends Application {
             DOMSource source = new DOMSource(doc);
             StreamResult result = new StreamResult(path.toFile());
             transformer.transform(source, result);
+
+            // Guardar el path del archivo
+            PATH = path;
 
         } catch (ParserConfigurationException | TransformerException e) {
             throw new RuntimeException(e);
