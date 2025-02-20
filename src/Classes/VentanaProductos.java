@@ -13,8 +13,9 @@ import javafx.stage.FileChooser;
 import java.io.File;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
-import java.util.regex.Pattern;
 
 public class VentanaProductos {
     private TextField txtCodigo, txtNombre, txtCantidad, txtPrecio, txtDescripcion;
@@ -342,11 +343,11 @@ public class VentanaProductos {
         cbCategoria.getSelectionModel().clearSelection();
 
         // Print and add the product to the list
-        imprimirProducto(p);
+        lista.getItems().clear();
+        mostrarProductos();
 
     }
 
-    // metodo para buscar uno o varios productos
     private void buscarProducto() {
         String codigo = txtCodigo.getText();
         String nombre = txtNombre.getText();
@@ -403,8 +404,12 @@ public class VentanaProductos {
                         return;
                     }
                 }
-                if (!descripcion.isEmpty() && !p.getDescripcion().equals(descripcion)) {
-                    match = false;
+                if (!descripcion.isEmpty()) {
+                    if (!p.getDescripcion().trim().toLowerCase().contains(descripcion.trim().toLowerCase())) {
+                        match = false;
+                    } else if (!p.getDescripcion().trim().toUpperCase().contains(descripcion.trim().toUpperCase())) {
+                        match = false;
+                    }
                 }
 
                 if (categoria != null && !p.getCategoria().equals(categoria)) {
@@ -473,7 +478,6 @@ public class VentanaProductos {
 
     }
 
-    // Metodo para modificar un producto existente
     private void modificarProducto() {
         String codigo = txtCodigo.getText();
         String nombre = txtNombre.getText();
@@ -531,6 +535,7 @@ public class VentanaProductos {
         }
     }
 
+    // Metodo para guardar los cambios en el archivo seleccionando la ubicación
     private void guardar() {
         // Permite al usuario seleccionar la ubicación para guardar el archivo
         FileChooser fileChooser = new FileChooser();
@@ -566,7 +571,9 @@ public class VentanaProductos {
 
     private void mostrarProductos() {
         lista.getItems().clear();
-        for (Producto p : tienda) {
+        List<Producto> productosOrdenados = new ArrayList<>(tienda.getProductos());
+        Collections.sort(productosOrdenados);
+        for (Producto p : productosOrdenados) {
             // Print and add each product to the list
             imprimirProducto(p);
         }
@@ -578,7 +585,6 @@ public class VentanaProductos {
         // Print the product
         System.out.println(producto);
     }
-
 
     private void limpiarCampos() {
         txtCodigo.clear();

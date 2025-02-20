@@ -48,6 +48,9 @@ public class Tienda implements Iterable<Producto> {
         }
         return null;
     }
+    public List<Producto> getProductos() {
+        return listaProductos;
+    }
 
     public void clear() {
         listaProductos.clear();
