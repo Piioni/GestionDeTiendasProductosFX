@@ -54,8 +54,7 @@ public class MenuPrincipal {
         menuLayout.getChildren().addAll(tituloBox, btnProductos, btnCargar, btnSalir);
 
         Scene scene = new Scene(menuLayout, 450, 400);
-        scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/Styles/StylesMenu.css")).toExternalForm());
-
+        scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/styles/stylesMenu.css")).toExternalForm());
         return scene;
     }
 

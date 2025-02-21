@@ -76,7 +76,9 @@ public class Configurator {
         panelImagen.setPadding(new Insets(20, 0, 0, 0));
 
         // Load the imageLogo
-        Image imageConfig2 = new Image(Objects.requireNonNull(getClass().getResource("/Images/config.png")).toExternalForm(), true);
+//        Image imageConfig2 = new Image(Objects.requireNonNull(getClass().getResource("/Images/config.png")).toExternalForm(), true);
+        Image imageConfig2 = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Images/config.png")));
+
         ImageView imageViewConfig = new ImageView(imageConfig2);
         imageViewConfig.setFitWidth(170);
         imageViewConfig.setFitHeight(170);
@@ -122,7 +124,7 @@ public class Configurator {
 
         // Crear la escena
         Scene scene = new Scene(panelPrincipal, 620, 500);
-        scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/Styles/StylesConfiguracion.css")).toExternalForm());
+        scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/styles/stylesConfig.css")).toExternalForm());
 
         return scene;
     }

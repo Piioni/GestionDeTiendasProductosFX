@@ -92,8 +92,11 @@ public class VentanaProductos {
         cbCategoria.getStyleClass().add("combo-box");
 
         // Crear la imagen
-        Image imageFind = new Image(Objects.requireNonNull(getClass().getResource("/Images/find.png")).toExternalForm(), 20, 20, true, true);
-        ImageView imageViewFind = new ImageView(imageFind);
+        Image imageFind = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Images/find.png")));        ImageView imageViewFind = new ImageView(imageFind);
+        imageViewFind.setFitWidth(20);
+        imageViewFind.setFitHeight(20);
+
+
 
         // Crear un Region para aumentar la hitbox
         Region hitbox = new Region();
@@ -154,7 +157,8 @@ public class VentanaProductos {
         panelImagen.setPadding(new Insets(20, 0, 0, 0));
 
         // Load the imageLogo
-        Image imageLogo = new Image(Objects.requireNonNull(getClass().getResource("/Images/product.png")).toExternalForm(), true);
+        Image imageLogo = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Images/product.png")));
+
 
         ImageView imageView = new ImageView(imageLogo);
         imageView.setFitWidth(170);
@@ -253,7 +257,7 @@ public class VentanaProductos {
         panelBotonConfiguracion.setPadding(new Insets(0, 10, 0, 10));
 
         // Load the image
-        Image imageConfig = new Image(Objects.requireNonNull(getClass().getResource("/Images/config.png")).toExternalForm(), true);
+        Image imageConfig = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Images/config.png")));
         ImageView imageViewConfig = new ImageView(imageConfig);
         imageViewConfig.setFitWidth(45);
         imageViewConfig.setFitHeight(45);
@@ -281,7 +285,8 @@ public class VentanaProductos {
         tal.getStyleClass().add("root");
 
         Scene scene = new Scene(tal, 870, 780);
-        scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/Styles/StylesProductos.css")).toExternalForm());
+        scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/styles/stylesProductos.css")).toExternalForm());
+
         mostrarProductos();
 
         return scene;
