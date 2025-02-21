@@ -1,0 +1,32 @@
+/* General styles for the window */
+.root {
+    -fx-font-family: Rubik-Bold;
+    -fx-background-color: linear-gradient(to bottom, #97b3ae, #d3e1d3);
+}
+
+/* Styles for labels */
+.label {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #231f1e;
+}
+
+/* Styles for buttons */
+.button {
+    -fx-background-color: #efede9;
+    -fx-text-fill: #3a2d28;
+    -fx-padding: 10px 20px;
+    -fx-border-radius: 5px;
+    -fx-background-radius: 5px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.3), 10, 0, 0, 5);
+}
+
+.button:hover {
+    -fx-background-color: #3a2d28;
+    -fx-text-fill: #efede9; /* Button text color on hover */
+}
+
+.button:pressed {
+    -fx-background-color: #f2c4b8; /* Button background color when pressed */
+    -fx-text-fill: #3a2d28; /* Button text color when pressed */
+}
