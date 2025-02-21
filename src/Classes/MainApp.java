@@ -53,12 +53,14 @@ public class MainApp extends Application {
     }
 
     public static void mostrarVentanaProductos() {
+        primaryStage.setTitle("Product Management");
         primaryStage.setScene(sceneProductos);
         ajustarPantalla(primaryStage, sceneProductos);
         primaryStage.show();
     }
 
     public static void MostrarConfiguracion() {
+        primaryStage.setTitle("Configuration");
         primaryStage.setScene(sceneConfiguracion);
         ajustarPantalla(primaryStage, sceneConfiguracion);
         primaryStage.show();

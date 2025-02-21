@@ -12,6 +12,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import java.io.File;
+import java.util.Objects;
 
 public class MenuPrincipal {
     private Tienda tienda;
@@ -53,7 +54,7 @@ public class MenuPrincipal {
         menuLayout.getChildren().addAll(tituloBox, btnProductos, btnCargar, btnSalir);
 
         Scene scene = new Scene(menuLayout, 450, 400);
-        scene.getStylesheets().add("./Styles/StylesMenu.css");
+        scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/Styles/StylesMenu.css")).toExternalForm());
 
         return scene;
     }

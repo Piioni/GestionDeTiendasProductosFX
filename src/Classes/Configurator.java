@@ -15,6 +15,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 
 import java.io.File;
+import java.util.Objects;
 
 public class Configurator {
     TextField txtNombreConf;
@@ -40,19 +41,19 @@ public class Configurator {
         panelCamposConf.setPadding(new Insets(5, 10, 20 ,15));
 
         // Crear los elementos de la interfaz
-        Label lblNombre = new Label("Nombre de la Tienda:");
+        Label lblNombre = new Label("Store name: ");
         lblNombre.getStyleClass().add("label");
 
-        Label lblDireccion = new Label("Direccion de la Tienda:");
+        Label lblDireccion = new Label("Store address: ");
         lblDireccion.getStyleClass().add("label");
 
-        Label lblDescripcion = new Label("Descripcion de la Tienda:");
+        Label lblDescripcion = new Label("Store description: ");
         lblDescripcion.getStyleClass().add("label");
 
         // Inicialización de los campos de texto
-        txtNombreConf = new TextField(); // Inicializar la variable de instancia
-        txtDireccionConf = new TextField(); // Inicializar la variable de instancia
-        txtDescripcionConf = new TextField(); // Inicializar la variable de instancia
+        txtNombreConf = new TextField();
+        txtDireccionConf = new TextField();
+        txtDescripcionConf = new TextField();
 
         // Configuración de los campos de texto
         txtNombreConf.setPrefWidth(250);
@@ -75,12 +76,12 @@ public class Configurator {
         panelImagen.setPadding(new Insets(20, 0, 0, 0));
 
         // Load the imageLogo
-        Image imageLogo = new Image("file:src/Images/product.png", true);
-        ImageView imageView = new ImageView(imageLogo);
-        imageView.setFitWidth(170);
-        imageView.setFitHeight(170);
-        imageView.setPreserveRatio(true);
-        panelImagen.getChildren().add(imageView);
+        Image imageConfig2 = new Image(Objects.requireNonNull(getClass().getResource("/Images/config.png")).toExternalForm(), true);
+        ImageView imageViewConfig = new ImageView(imageConfig2);
+        imageViewConfig.setFitWidth(170);
+        imageViewConfig.setFitHeight(170);
+        imageViewConfig.setPreserveRatio(true);
+        panelImagen.getChildren().add(imageViewConfig);
 
         // Panel inferior para los botones
         HBox panelInferiorConf = new HBox(100);
@@ -121,7 +122,7 @@ public class Configurator {
 
         // Crear la escena
         Scene scene = new Scene(panelPrincipal, 620, 500);
-        scene.getStylesheets().add("file:src/Styles/StylesConfiguracion.css");
+        scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/Styles/StylesConfiguracion.css")).toExternalForm());
 
         return scene;
     }
