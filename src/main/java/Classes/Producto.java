@@ -32,7 +32,8 @@ public class Producto implements Comparable<Producto> {
 
     }
 
-    // Getters
+    // Getters & Setters
+
     public String getCodigo() {
         return codigo;
     }

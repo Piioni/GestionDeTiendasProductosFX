@@ -26,7 +26,6 @@ public class MainApp extends Application {
     private static Scene sceneProductos;
     private static Scene sceneConfiguracion;
 
-
     @Override
     public void start(Stage primaryStage) {
         MainApp.primaryStage = primaryStage;

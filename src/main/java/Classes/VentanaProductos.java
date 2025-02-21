@@ -308,8 +308,8 @@ public class VentanaProductos {
             return;
         }
         // Verificar que el código no esté duplicado
-        if (tienda.buscarProducto(codigo) != null) {
-            mostrarAlerta("El código ya existe.");
+        if (tienda.buscarProducto(codigo) != null && tienda.buscarProducto(codigo).getCategoria().equals(categoria)) {
+            mostrarAlerta("Este producto ya existe con una misma categoria.");
             return;
         }
         // Verificar que el codigo cumpla la siguiente expresion regular (2 o 3 letras mayúsculas seguidas de 1 número)
