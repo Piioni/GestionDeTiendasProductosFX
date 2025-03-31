@@ -8,9 +8,7 @@ import model.Product;
 import java.util.List;
 
 public class ProductRepository {
-    private EntityManagerFactory emf;
-
-
+    private final EntityManagerFactory emf;
 
     public ProductRepository() {
         emf = Persistence.createEntityManagerFactory("product");
