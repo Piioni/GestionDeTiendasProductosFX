@@ -1,37 +1,51 @@
-package Classes;
+package model;
+
+import jakarta.persistence.*;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class Tienda implements Iterable<Producto> {
-    private String nombre = "Tienda de Productos Paquito";
-    private String direccion = "Calle Falsa 123";
-    private String descripcion = "Tienda de productos varios!";
-    private final List<Producto> listaProductos;
+@Entity
+@Table(name = "tienda")
+public class Tienda implements Iterable<Product> {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
+
+    @Column(name = "nombre", nullable = false)
+    private String nombre;
+
+    @Column(name = "direccion", nullable = false)
+    private String direccion;
+
+    @Column(name = "descripcion", nullable = false)
+    private String descripcion;
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private final List<Product> listaProductos = new ArrayList<>();
 
     public Tienda(String nombre, String direccion, String descripcion) {
         this.descripcion = descripcion;
         this.direccion = direccion;
         this.nombre = nombre;
-        listaProductos = new ArrayList<>();
+
     }
 
-    public Tienda() {
-        listaProductos = new ArrayList<>();
-    }
+    public Tienda() {}
 
     @Override
-    public Iterator<Producto> iterator() {
+    public Iterator<Product> iterator() {
         return listaProductos.iterator();
     }
 
-    public void addProduct(Producto p) {
+    public void addProduct(Product p) {
         listaProductos.add(p);
     }
 
     public void eliminarProducto(String codigo) {
-        Producto p = buscarProducto(codigo);
+        Product p = buscarProducto(codigo);
         if (p != null) {
             listaProductos.remove(p);
         } else {
@@ -40,15 +54,16 @@ public class Tienda implements Iterable<Producto> {
 
     }
 
-    public Producto buscarProducto(String codigo) {
-        for (Producto p : listaProductos) {
+    public Product buscarProducto(String codigo) {
+        for (Product p : listaProductos) {
             if (p.getCodigo().equals(codigo)) {
                 return p;
             }
         }
         return null;
     }
-    public List<Producto> getProductos() {
+
+    public List<Product> getProductos() {
         return listaProductos;
     }
 

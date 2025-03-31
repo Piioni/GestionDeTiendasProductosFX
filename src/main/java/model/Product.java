@@ -1,14 +1,35 @@
-package Classes;
+package model;
 
-public class Producto implements Comparable<Producto> {
-    private final String codigo;
+import jakarta.persistence.*;
+
+@Entity
+@Table(name = "product")
+public class Product implements Comparable<Product> {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private String codigo;
+
+    @Column(name = "nombre", nullable = false)
     private String nombre;
+
+    @Column(name = "precio", nullable = false)
     private double precio;
+
+    @Column(name = "cantidad", nullable = false)
     private int cantidad;
+
+    @Column(name = "descripcion", nullable = false)
     private String descripcion;
+
+    @Column(name = "categoria", nullable = false)
     private String categoria;
 
-    public Producto(String codigo, String nombre, double precio, int cantidad, String descripcion, String categoria) {
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "tienda_id", nullable = false)
+    private Tienda tienda;
+
+    public Product(String codigo, String nombre, double precio, int cantidad, String descripcion, String categoria) {
         this.codigo = codigo;
         this.nombre = nombre;
         this.precio = precio;
@@ -17,8 +38,12 @@ public class Producto implements Comparable<Producto> {
         this.categoria = categoria;
     }
 
+    public Product() {
+
+    }
+
     @Override
-    public int compareTo(Producto o) {
+    public int compareTo(Product o) {
         return this.categoria.compareTo(o.categoria) == 0 ? this.codigo.compareTo(o.codigo) : this.categoria.compareTo(o.categoria);
     }
 
