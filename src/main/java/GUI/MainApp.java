@@ -1,5 +1,7 @@
-package Classes;
+package GUI;
 
+import Classes.Producto;
+import Classes.Tienda;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Screen;

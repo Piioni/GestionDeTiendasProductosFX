@@ -1,5 +1,6 @@
-package Classes;
+package GUI;
 
+import Classes.Tienda;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
