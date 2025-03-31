@@ -1,7 +1,7 @@
-package GUI;
+package gui;
 
-import Classes.Producto;
-import Classes.Tienda;
+import model.Product;
+import model.Tienda;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
@@ -334,7 +334,7 @@ public class VentanaProductos {
             return;
         }
 
-        Producto p = new Producto(codigo, nombre, precio, cantidad, descripcion, categoria);
+        Product p = new Product(codigo, nombre, precio, cantidad, descripcion, categoria);
         tienda.addProduct(p);
 
         // Limpiar los textfields
@@ -371,7 +371,7 @@ public class VentanaProductos {
         while (!encontrado) {
 
             // Recorrer la lista de productos
-            for (Producto p : tienda) {
+            for (Product p : tienda) {
                 // Inicializa el match a true
                 boolean match = true;
 
@@ -448,7 +448,7 @@ public class VentanaProductos {
 
         lista.getItems().clear();
 
-        for (Producto p : tienda) {
+        for (Product p : tienda) {
             if (p.getCategoria().equals(categoria)) {
                 imprimirProducto(p);
             }
@@ -468,7 +468,7 @@ public class VentanaProductos {
         }
 
         // Buscar el producto en la lista
-        Producto p = tienda.buscarProducto(codigoEscrito);
+        Product p = tienda.buscarProducto(codigoEscrito);
 
         if (p != null) {
 
@@ -508,7 +508,7 @@ public class VentanaProductos {
         }
 
         // Buscar el producto en la lista
-        Producto p = tienda.buscarProducto(codigo);
+        Product p = tienda.buscarProducto(codigo);
 
         if (p != null) {
             // Modificar los valores del producto
@@ -574,15 +574,15 @@ public class VentanaProductos {
 
     private void mostrarProductos() {
         lista.getItems().clear();
-        List<Producto> productosOrdenados = new ArrayList<>(tienda.getProductos());
+        List<Product> productosOrdenados = new ArrayList<>(tienda.getProductos());
         Collections.sort(productosOrdenados);
-        for (Producto p : productosOrdenados) {
+        for (Product p : productosOrdenados) {
             // Print and add each product to the list
             imprimirProducto(p);
         }
     }
 
-    private void imprimirProducto(Producto producto) {
+    private void imprimirProducto(Product producto) {
         // Add the product to the list
         lista.getItems().add(producto.toString());
         // Print the product

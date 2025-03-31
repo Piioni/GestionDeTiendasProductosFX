@@ -1,7 +1,7 @@
-package GUI;
+package gui;
 
-import Classes.Producto;
-import Classes.Tienda;
+import model.Product;
+import model.Tienda;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Screen;
@@ -32,7 +32,7 @@ public class MainApp extends Application {
     public void start(Stage primaryStage) {
         MainApp.primaryStage = primaryStage;
         MainApp.tienda = new Tienda();
-        primaryStage.setTitle("Main Menu");
+        primaryStage.setTitle("Bienvenido");
         primaryStage.setResizable(false);
 
         MenuPrincipal menuPrincipal = new MenuPrincipal(primaryStage, tienda);
@@ -48,6 +48,7 @@ public class MainApp extends Application {
     }
 
     public static void mostrarMenuPrincipal() {
+        primaryStage.setTitle("Main Menu");
         primaryStage.setScene(sceneMenuPrincipal);
         ajustarPantalla(primaryStage, sceneMenuPrincipal);
         primaryStage.show();
@@ -113,7 +114,7 @@ public class MainApp extends Application {
                 String categoria = productoElement.getElementsByTagName("categoria").item(0).getTextContent();
 
                 // Crear el objeto Producto y agregarlo a la tienda
-                Producto producto = new Producto(codigo, nombre, precio, cantidad, descripcion, categoria);
+                Product producto = new Product(codigo, nombre, precio, cantidad, descripcion, categoria);
                 tienda.addProduct(producto);
             }
 
@@ -161,7 +162,7 @@ public class MainApp extends Application {
             productos.setAttribute("num", String.valueOf(tienda.size()));
 
             // Crear un elemento <producto> por cada producto en la tienda
-            for (Producto producto : tienda){
+            for (Product producto : tienda){
                 Element productoElement = doc.createElement("producto");
                 productoElement.setAttribute("codigo", producto.getCodigo());
 
