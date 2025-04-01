@@ -14,7 +14,7 @@ public class TiendaSelectionWindow {
 
     public TiendaSelectionWindow(TiendaService tiendaService) {
         ComboBox<Tienda> comboTiendas = new ComboBox<>();
-        comboTiendas.getItems().addAll(tiendaService.getTiendas());
+        comboTiendas.getItems().addAll(tiendaService.getAllTiendas());
         // Se asume que la clase Tienda tiene implementado el método toString() para mostrar el nombre
 
         Button btnAceptar = new Button("Aceptar");

@@ -28,6 +28,11 @@ public class MainApp extends Application {
     private static Scene sceneProductos;
     private static Scene sceneConfiguracion;
 
+    public static void setTienda(Tienda tiendaSeleccionada) {
+        tienda = tiendaSeleccionada;
+
+    }
+
     @Override
     public void start(Stage primaryStage) {
         MainApp.primaryStage = primaryStage;
@@ -41,7 +46,7 @@ public class MainApp extends Application {
         VentanaProductos ventanaProductos = new VentanaProductos(tienda, PATH);
         sceneProductos = ventanaProductos.getScene();
 
-        Configurator configurator = new Configurator(tienda);
+        TiendaConfigurator configurator = new TiendaConfigurator();
         sceneConfiguracion = configurator.getScene();
 
         mostrarMenuPrincipal();
@@ -120,8 +125,6 @@ public class MainApp extends Application {
 
             VentanaProductos ventanaProductos = new VentanaProductos(tienda, path);
             sceneProductos = ventanaProductos.getScene();
-            Configurator configurator = new Configurator(tienda);
-            sceneConfiguracion = configurator.getScene();
 
         } catch (ParserConfigurationException | IOException | SAXException e) {
             throw new RuntimeException(e);
