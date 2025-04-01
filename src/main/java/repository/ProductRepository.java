@@ -11,7 +11,7 @@ public class ProductRepository {
     private final EntityManagerFactory emf;
 
     public ProductRepository() {
-        emf = Persistence.createEntityManagerFactory("product");
+        emf = Persistence.createEntityManagerFactory("jpaUnit");
     }
 
     public void save(Product product) {
