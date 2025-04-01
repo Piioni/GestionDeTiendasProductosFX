@@ -10,10 +10,8 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
-import javafx.stage.FileChooser;
+import service.ProductService;
 
-import java.io.File;
-import java.nio.file.Path;
 import java.util.*;
 
 public class VentanaProductos {
@@ -21,6 +19,8 @@ public class VentanaProductos {
     private ComboBox<String> cbCategoria;
     private ListView<String> lista;
     private final Tienda tienda;
+    private final ProductService productService = new ProductService();
+
 
     public VentanaProductos(Tienda tienda) {
         this.tienda = tienda;
@@ -239,17 +239,13 @@ public class VentanaProductos {
         btnMostrar.getStyleClass().add("button-inferior");
         btnMostrar.setOnAction(e -> mostrarProductos());
         btnMostrar.setPrefWidth(150);
-        Button btnGuardar = new Button("Save");
-        btnGuardar.getStyleClass().add("button-inferior");
-        btnGuardar.setOnAction(e -> guardarCambios());
-        btnGuardar.setPrefWidth(150);
         Button btnSalir = new Button("Exit");
         btnSalir.getStyleClass().add("button-inferior");
         btnSalir.setOnAction(e -> MainApp.mostrarMenuPrincipal());
         btnSalir.setPrefWidth(150);
 
         // Añadir los botones al panel de botones inferior y al panel inferior
-        panelBotonesInferior.getChildren().addAll(btnMostrar, btnGuardar, btnSalir);
+        panelBotonesInferior.getChildren().addAll(btnMostrar, btnSalir);
         panelListaBotones.getChildren().addAll(panelLista, panelBotonesInferior);
 
         HBox panelBotonConfiguracion = new HBox();
@@ -294,7 +290,6 @@ public class VentanaProductos {
     }
 
     private void agregarProducto() {
-        // Obtener los valores de los textfields
         String codigo = txtCodigo.getText();
         String nombre = txtNombre.getText();
         String cantidadStr = txtCantidad.getText();
@@ -302,17 +297,15 @@ public class VentanaProductos {
         String descripcion = txtDescripcion.getText();
         String categoria = cbCategoria.getValue();
 
-        // Verificar que los campos no estén vacíos
         if (codigo.isEmpty() || nombre.isEmpty() || cantidadStr.isEmpty() || precioStr.isEmpty() || descripcion.isEmpty() || categoria == null) {
             mostrarAlerta("Todos los campos son obligatorios.");
             return;
         }
         // Verificar que el código no esté duplicado
-        if (tienda.buscarProducto(codigo) != null && tienda.buscarProducto(codigo).getCategoria().equals(categoria)) {
-            mostrarAlerta("Este producto ya existe con una misma categoria.");
+        if (productService.getProductById(codigo) != null) {
+            mostrarAlerta("Este producto ya existe.");
             return;
         }
-        // Verificar que el codigo cumpla la siguiente expresion regular (2 o 3 letras mayúsculas seguidas de 1 número)
         if (!codigo.matches("[A-Z]{2,3}\\d{1,3}")) {
             mostrarAlerta("El código debe contener 2 o 3 letras mayúsculas seguidas de 1 número.");
             return;
@@ -320,8 +313,6 @@ public class VentanaProductos {
             mostrarAlerta("El código debe tener entre 3 y 6 caracteres.");
             return;
         }
-
-        // Verificar que los valores numéricos sean válidos
         int cantidad;
         double precio;
         try {
@@ -331,20 +322,11 @@ public class VentanaProductos {
             mostrarAlerta("Cantidad y precio deben ser valores numéricos.");
             return;
         }
-
         Product p = new Product(codigo, nombre, precio, cantidad, descripcion, categoria);
-        tienda.addProduct(p);
-
-        // Limpiar los textfields
-        txtCodigo.clear();
-        txtNombre.clear();
-        txtCantidad.clear();
-        txtPrecio.clear();
-        txtDescripcion.clear();
-        cbCategoria.getSelectionModel().clearSelection();
-
-        // Print and add the product to the list
-        lista.getItems().clear();
+        // Se utiliza update para agregar (merge insert)
+        productService.update(p);
+        mostrarAlerta("Producto agregado correctamente.");
+        limpiarCampos();
         mostrarProductos();
 
     }
@@ -443,16 +425,13 @@ public class VentanaProductos {
             mostrarAlerta("Seleccione una categoría para buscar.");
             return;
         }
-
         lista.getItems().clear();
-
-        for (Product p : tienda) {
-            if (p.getCategoria().equals(categoria)) {
-                imprimirProducto(p);
+        List<Product> productos = productService.getProductsByCategory(categoria);
+        if (productos != null && !productos.isEmpty()) {
+            for (Product p : productos) {
+                lista.getItems().add(p.toString());
             }
-        }
-
-        if (lista.getItems().isEmpty()) {
+        } else {
             mostrarAlerta("No se encontraron productos en la categoría seleccionada.");
         }
     }
@@ -464,19 +443,17 @@ public class VentanaProductos {
             mostrarAlerta("Por favor, ingrese el código del producto a eliminar.");
             return;
         }
-
-        // Buscar el producto en la lista
-        Product p = tienda.buscarProducto(codigoEscrito);
-
+        Product p = productService.getProductById(codigoEscrito);
         if (p != null) {
-
-            tienda.eliminarProducto(p.getCodigo());
+            // Se asume que getCodigo retorna el identificador usado en delete
+            // Nota: revisar la firma de delete en ProductService y ajustar si es necesario
+            productService.delete(p.getCodigo());
+            mostrarAlerta("Producto eliminado correctamente.");
             limpiarCampos();
             mostrarProductos();
         } else {
             mostrarAlerta("El producto con el código " + codigoEscrito + " no existe.");
         }
-
     }
 
     private void modificarProducto() {
@@ -486,17 +463,12 @@ public class VentanaProductos {
         String precioStr = txtPrecio.getText();
         String descripcion = txtDescripcion.getText();
         String categoria = cbCategoria.getValue();
-
-        // Verificar que los campos no estén vacíos
         if (codigo.isEmpty() || nombre.isEmpty() || cantidadStr.isEmpty() || precioStr.isEmpty() || descripcion.isEmpty() || categoria == null) {
             mostrarAlerta("Todos los campos son obligatorios.");
             return;
         }
-
-        // Verificar que los valores numéricos sean válidos
         int cantidad;
         double precio;
-
         try {
             cantidad = Integer.parseInt(cantidadStr);
             precio = Double.parseDouble(precioStr);
@@ -504,39 +476,26 @@ public class VentanaProductos {
             mostrarAlerta("Cantidad y precio deben ser valores numéricos.");
             return;
         }
-
-        // Buscar el producto en la lista
-        Product p = tienda.buscarProducto(codigo);
-
+        Product p = productService.getProductById(codigo);
         if (p != null) {
-            // Modificar los valores del producto
             p.setNombre(nombre);
             p.setCantidad(cantidad);
             p.setPrecio(precio);
             p.setDescripcion(descripcion);
             p.setCategoria(categoria);
-
-            // Actualizar la lista
-            lista.getItems().clear();
+            productService.update(p);
+            mostrarAlerta("Producto actualizado correctamente.");
+            limpiarCampos();
             mostrarProductos();
         } else {
             mostrarAlerta("Producto no encontrado.");
         }
     }
 
-    // Metodo para guardar los cambios en el archivo sin necesidad de seleccionar la ubicación
-    public void guardarCambios() {
-
-    }
-
-    // Metodo para guardar los cambios en el archivo seleccionando la ubicación
-    private void guardar() {
-
-    }
-
     private void mostrarProductos() {
         lista.getItems().clear();
-        List<Product> productosOrdenados = new ArrayList<>(tienda.getProductos());
+        List<Product> productos = productService.getAllProducts();
+        List<Product> productosOrdenados = new ArrayList<>(productos);
         Collections.sort(productosOrdenados);
         for (Product p : productosOrdenados) {
             // Print and add each product to the list
@@ -562,12 +521,10 @@ public class VentanaProductos {
     }
 
     private void mostrarAlerta(String mensaje) {
-        // Crear una alerta para mostrar un mensaje de error
-        Alert alerta = new Alert(Alert.AlertType.ERROR);
-        alerta.setTitle("Error");
+        Alert alerta = new Alert(Alert.AlertType.INFORMATION);
+        alerta.setTitle("Información");
         alerta.setHeaderText(null);
         alerta.setContentText(mensaje);
         alerta.showAndWait();
     }
-
 }
