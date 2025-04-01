@@ -20,13 +20,14 @@ public class StoreConfigurator {
     private TextField txtBuscar;
     private final TiendaService tiendaService;
     private ListView<Tienda> listViewTiendas;
-    private final double BUTTON_WIDTH = 140;
 
     public StoreConfigurator() {
         tiendaService = new TiendaService();
     }
 
     public Scene getScene() {
+        double BUTTON_WIDTH = 140;
+
         // ListView para mostrar todas las tiendas
         listViewTiendas = new ListView<>();
         listViewTiendas.setPrefWidth(300);
