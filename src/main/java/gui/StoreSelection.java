@@ -1,4 +1,3 @@
-// Archivo: src/main/java/gui/SeleccionarTienda.java
 package gui;
 
 import javafx.geometry.Insets;
@@ -14,11 +13,11 @@ import service.TiendaService;
 
 import java.util.List;
 
-public class StoreSelecction {
+public class StoreSelection {
     private final TiendaService tiendaService;
     private ListView<Tienda> listViewTiendas;
 
-    public StoreSelecction() {
+    public StoreSelection() {
         tiendaService = new TiendaService();
     }
 
@@ -42,11 +41,15 @@ public class StoreSelecction {
                 MainApp.setTienda(tiendaSeleccionada);
                 MainApp.mostrarVentanaProductos();
             } else {
-                mostrarAlerta("Seleccione una tienda de la lista.");
+                mostrarAlerta();
             }
         });
 
-        VBox layout = new VBox(10, listViewTiendas, btnSeleccionar);
+        // Botón para salir al menú principal
+        Button btnSalir = new Button("Exit to Main Menu");
+        btnSalir.setOnAction(e -> MainApp.mostrarMenuPrincipal());
+
+        VBox layout = new VBox(10, listViewTiendas, btnSeleccionar, btnSalir);
         layout.setPadding(new Insets(20));
         layout.setAlignment(Pos.CENTER);
 
@@ -54,15 +57,15 @@ public class StoreSelecction {
     }
 
     private void refreshListView() {
-        List<Tienda> tiendas = tiendaService.getAllTiendas();
+        List<Tienda> tiendas = tiendaService.getTiendas();
         listViewTiendas.getItems().setAll(tiendas);
     }
 
-    private void mostrarAlerta(String mensaje) {
+    private void mostrarAlerta() {
         Alert alerta = new Alert(Alert.AlertType.INFORMATION);
-        alerta.setTitle("Información");
+        alerta.setTitle("Warning");
         alerta.setHeaderText(null);
-        alerta.setContentText(mensaje);
+        alerta.setContentText("Seleccione una tienda de la lista.");
         alerta.showAndWait();
     }
 }

@@ -147,7 +147,7 @@ public class StoreConfigurator {
             tiendaSeleccionada.setNombre(txtNombreConf.getText().trim());
             tiendaSeleccionada.setDireccion(txtDireccionConf.getText().trim());
             tiendaSeleccionada.setDescripcion(txtDescripcionConf.getText().trim());
-            tiendaService.updateTienda(tiendaSeleccionada);
+            tiendaService.update(tiendaSeleccionada);
             mostrarAlerta("Cambios guardados correctamente.");
             refreshListView();
         } else {
@@ -167,14 +167,14 @@ public class StoreConfigurator {
         nuevaTienda.setNombre(nombre);
         nuevaTienda.setDireccion(direccion);
         nuevaTienda.setDescripcion(descripcion);
-        tiendaService.saveTienda(nuevaTienda);
+        tiendaService.save(nuevaTienda);
         mostrarAlerta("Tienda agregada correctamente.");
         refreshListView();
     }
 
     private void buscarTienda() {
         String termino = txtBuscar.getText().trim().toLowerCase();
-        List<Tienda> tiendasFiltradas = tiendaService.getAllTiendas().stream()
+        List<Tienda> tiendasFiltradas = tiendaService.getTiendas().stream()
                 .filter(t -> t.getNombre().toLowerCase().contains(termino))
                 .collect(Collectors.toList());
         listViewTiendas.getItems().setAll(tiendasFiltradas);
@@ -183,7 +183,7 @@ public class StoreConfigurator {
     private void eliminarTienda() {
         Tienda tiendaSeleccionada = listViewTiendas.getSelectionModel().getSelectedItem();
         if (tiendaSeleccionada != null) {
-            tiendaService.deleteTienda(tiendaSeleccionada);
+            tiendaService.delete(tiendaSeleccionada);
             mostrarAlerta("Tienda eliminada correctamente.");
             refreshListView();
         } else {
@@ -198,7 +198,7 @@ public class StoreConfigurator {
     }
 
     private void refreshListView() {
-        List<Tienda> tiendas = tiendaService.getAllTiendas();
+        List<Tienda> tiendas = tiendaService.getTiendas();
         if (listViewTiendas == null) {
             return;
         }

@@ -1,6 +1,5 @@
 package gui;
 
-import model.Tienda;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -9,20 +8,12 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
-import javafx.stage.FileChooser;
-import javafx.stage.Stage;
 
-import java.io.File;
 import java.util.Objects;
 
 public class MenuPrincipal {
-    private Tienda tienda;
-    private final Stage stage;
 
-    public MenuPrincipal(Stage stage, Tienda tienda) {
-        this.stage = stage;
-        this.tienda = tienda;
-    }
+    public MenuPrincipal() {}
 
     public Scene getScene() {
         // Creation de la estructura de la escena

@@ -1,4 +1,3 @@
-// Archivo: src/main/java/gui/MainApp.java
 package gui;
 
 import model.Tienda;
@@ -7,7 +6,6 @@ import javafx.scene.Scene;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.geometry.Rectangle2D;
-import service.TiendaService;
 
 public class MainApp extends Application {
     private static Stage primaryStage;
@@ -22,13 +20,13 @@ public class MainApp extends Application {
         MainApp.primaryStage = primaryStage;
 
         // Crear las escenas una sola vez
-        MenuPrincipal menuPrincipal = new MenuPrincipal(primaryStage, tienda);
+        MenuPrincipal menuPrincipal = new MenuPrincipal();
         sceneMenuPrincipal = menuPrincipal.getScene();
 
         StoreConfigurator configurator = new StoreConfigurator();
         sceneConfiguracion = configurator.getScene();
 
-        StoreSelecction selector = new StoreSelecction();
+        StoreSelection selector = new StoreSelection();
         sceneSeleccionarTienda = selector.getScene();
 
         // Mostrar el menú principal al inicio
