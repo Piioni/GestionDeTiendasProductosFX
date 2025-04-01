@@ -44,8 +44,8 @@ public class MenuPrincipal {
         btnProductos.setOnAction(e -> MainApp.mostrarVentanaProductos());
         btnProductos.setPrefWidth(200);
 
-        Button btnCargar = new Button("Load");
-        btnCargar.setOnAction(e -> cargar());
+        Button btnCargar = new Button("Store configuration");
+        btnCargar.setOnAction(e -> MainApp.mostrarConfiguracion());
         btnCargar.setPrefWidth(200);
 
         Button btnSalir = new Button("Exit");
@@ -59,30 +59,5 @@ public class MenuPrincipal {
         return scene;
     }
 
-
-    private void cargar() {
-        // Permite al usuario seleccionar un archivo para cargar
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Cargar Archivo");
-
-        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("XML files (*.xml)", "*.xml");
-        fileChooser.getExtensionFilters().add(extFilter);
-
-        File file = fileChooser.showOpenDialog(stage);
-        if (file != null) {
-            try {
-                // Limpiar la lista de productos y carga los productos desde el archivo
-                tienda.clear();
-                tienda = MainApp.cargarProductosXML(file.toPath());
-
-                MainApp.setPath(file.toPath()); // Guardar la ubicación del archivo para futuras referencias
-                System.out.println("Cargado desde: " + file.getAbsolutePath());
-                MainApp.mostrarVentanaProductos();
-
-            } catch (Exception e) {
-                System.out.println("Error al cargar el archivo 2: " + e.getMessage());
-            }
-        }
-    }
 
 }

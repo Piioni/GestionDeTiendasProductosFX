@@ -8,11 +8,11 @@ import javafx.scene.layout.VBox;
 import model.Tienda;
 import service.TiendaService;
 
-public class TiendaSelectionWindow {
+public class StoreSelectionWindow {
     private Scene scene;
     private Tienda tiendaSeleccionada;
 
-    public TiendaSelectionWindow(TiendaService tiendaService) {
+    public StoreSelectionWindow(TiendaService tiendaService) {
         ComboBox<Tienda> comboTiendas = new ComboBox<>();
         comboTiendas.getItems().addAll(tiendaService.getAllTiendas());
         // Se asume que la clase Tienda tiene implementado el método toString() para mostrar el nombre

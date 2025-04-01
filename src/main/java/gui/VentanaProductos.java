@@ -21,11 +21,9 @@ public class VentanaProductos {
     private ComboBox<String> cbCategoria;
     private ListView<String> lista;
     private final Tienda tienda;
-    private Path PATH;
 
-    public VentanaProductos(Tienda tienda, Path PATH) {
+    public VentanaProductos(Tienda tienda) {
         this.tienda = tienda;
-        this.PATH = PATH;
     }
 
     public Scene getScene() {
@@ -265,7 +263,7 @@ public class VentanaProductos {
         imageViewConfig.setFitHeight(45);
         imageViewConfig.setPreserveRatio(true);
 
-        imageViewConfig.setOnMouseClicked(e -> MainApp.MostrarConfiguracion());
+        imageViewConfig.setOnMouseClicked(e -> MainApp.mostrarConfiguracion());
 
         // Change the cursor to hand when hovering over the image
         imageViewConfig.setOnMouseEntered(e -> imageViewConfig.setCursor(Cursor.HAND));
@@ -528,48 +526,12 @@ public class VentanaProductos {
 
     // Metodo para guardar los cambios en el archivo sin necesidad de seleccionar la ubicación
     public void guardarCambios() {
-        // Verificar si se ha seleccionado una ubicación para guardar el archivo anteriormente
-        if (PATH == null) {
-            mostrarAlerta("Por favor, seleccione una ubicación para guardar el archivo.");
-            guardar();
-        } else {
-            MainApp.guardarProductosXML(tienda, PATH);
-            System.out.println("Cambios guardados en: " + PATH.toAbsolutePath());
-        }
+
     }
 
     // Metodo para guardar los cambios en el archivo seleccionando la ubicación
     private void guardar() {
-        // Permite al usuario seleccionar la ubicación para guardar el archivo
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Guardar Archivo");
 
-        FileChooser.ExtensionFilter extFilter = new FileChooser.
-                ExtensionFilter("Archivos XML (*.xml)", "*.xml");
-        fileChooser.getExtensionFilters().add(extFilter);
-
-        File file = fileChooser.showSaveDialog(null);
-        if (file != null) {
-            try {
-                // Asegurarse de que el archivo tenga la extensión .json
-                if (!file.getPath().endsWith(".xml")) {
-                    file = new File(file.getPath() + ".xml");
-                }
-
-                // Guardar la lista de productos en un archivo JSON
-                MainApp.guardarProductosXML(tienda, file.toPath());
-                PATH = file.toPath(); // Guardar la ubicación del archivo para futuras referencias
-                mostrarAlerta("Cambios guardados correctamente.");
-                System.out.println("Guardado en: " + file.getAbsolutePath());
-
-            } catch (SecurityException e) {
-                mostrarAlerta("Permiso denegado: " + e.getMessage());
-            } catch (Exception e) {
-                mostrarAlerta("Error inesperado: " + e.getMessage());
-            }
-        } else {
-            mostrarAlerta("Por favor, seleccione una ubicación para guardar el archivo.");
-        }
     }
 
     private void mostrarProductos() {

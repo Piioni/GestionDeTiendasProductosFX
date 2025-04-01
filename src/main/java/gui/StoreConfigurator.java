@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-public class TiendaConfigurator {
+public class StoreConfigurator {
     private TextField txtNombreConf;
     private TextField txtDireccionConf;
     private TextField txtDescripcionConf;
@@ -22,7 +22,7 @@ public class TiendaConfigurator {
     private ListView<Tienda> listViewTiendas;
     private final double BUTTON_WIDTH = 140;
 
-    public TiendaConfigurator() {
+    public StoreConfigurator() {
         tiendaService = new TiendaService();
     }
 
