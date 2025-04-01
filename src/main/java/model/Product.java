@@ -25,7 +25,7 @@ public class Product implements Comparable<Product> {
     @Column(name = "categoria", nullable = false)
     private String categoria;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "tienda_id", nullable = false)
     private Tienda tienda;
 

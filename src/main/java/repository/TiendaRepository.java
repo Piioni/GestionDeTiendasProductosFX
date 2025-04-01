@@ -26,7 +26,7 @@ public class TiendaRepository {
 
     public List<Tienda> findAll() {
         EntityManager em = emf.createEntityManager();
-        List<Tienda> tiendas = em.createQuery("FROM Tienda", Tienda.class).getResultList();
+        List<Tienda> tiendas = em.createQuery("Select t FROM Tienda t", Tienda.class).getResultList();
         em.close();
         return tiendas;
     }

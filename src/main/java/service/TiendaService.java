@@ -2,10 +2,12 @@ package service;
 
 import model.Tienda;
 import repository.TiendaRepository;
+
 import java.util.List;
 
 public class TiendaService {
     private final TiendaRepository tiendaRepository = new TiendaRepository();
+
 
     public void saveTienda(Tienda tienda) {
         // Aquí se puede incluir lógica adicional o validaciones

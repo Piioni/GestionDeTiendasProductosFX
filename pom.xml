@@ -9,12 +9,20 @@
     <version>1.0</version>
 
     <properties>
-        <maven.compiler.source>21</maven.compiler.source>
-        <maven.compiler.target>21</maven.compiler.target>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <javafx.version>21</javafx.version>
-        <javafx.maven.plugin.version>0.0.8</javafx.maven.plugin.version>
+
     </properties>
+
+    <repositories>
+        <repository>
+            <id>objectdb</id>
+            <name>ObjectDB Repository</name>
+            <url>https://m2.objectdb.com</url>
+        </repository>
+    </repositories>
+
     <dependencies>
         <!-- JavaFX -->
         <dependency>
@@ -42,17 +50,31 @@
         </dependency>
 
         <!-- Hibernate core -->
+<!--        <dependency>-->
+<!--            <groupId>org.hibernate.orm</groupId>-->
+<!--            <artifactId>hibernate-core</artifactId>-->
+<!--            <version>6.4.0.Final</version>-->
+<!--        </dependency>-->
+
+<!--        &lt;!&ndash; Driver de MariaDB &ndash;&gt;-->
+<!--        <dependency>-->
+<!--            <groupId>org.mariadb.jdbc</groupId>-->
+<!--            <artifactId>mariadb-java-client</artifactId>-->
+<!--            <version>3.1.4</version>-->
+<!--        </dependency>-->
+
+        <!-- Driver de ObjectDB -->
         <dependency>
-            <groupId>org.hibernate.orm</groupId>
-            <artifactId>hibernate-core</artifactId>
-            <version>6.4.0.Final</version>
+            <groupId>com.objectdb</groupId>
+            <artifactId>objectdb-jk</artifactId>
+            <version>2.9.2</version>
         </dependency>
 
-        <!-- Driver de MariaDB -->
+        <!-- Slf4J -->
         <dependency>
-            <groupId>org.mariadb.jdbc</groupId>
-            <artifactId>mariadb-java-client</artifactId>
-            <version>3.1.4</version>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+            <version>1.7.36</version>
         </dependency>
 
         <!-- Logging básico (opcional, pero evita advertencias) -->
