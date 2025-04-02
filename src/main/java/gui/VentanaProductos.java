@@ -1,7 +1,7 @@
 package gui;
 
 import model.Product;
-import model.Tienda;
+import model.Store;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
@@ -18,11 +18,11 @@ public class VentanaProductos {
     private TextField txtCodigo, txtNombre, txtCantidad, txtPrecio, txtDescripcion;
     private ComboBox<String> cbCategoria;
     private ListView<String> lista;
-    private final Tienda tienda;
+    private final Store tienda;
     private final ProductService productService = new ProductService();
 
 
-    public VentanaProductos(Tienda tienda) {
+    public VentanaProductos(Store tienda) {
         this.tienda = tienda;
     }
 

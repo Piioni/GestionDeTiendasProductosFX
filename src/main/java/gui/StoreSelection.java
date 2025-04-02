@@ -8,17 +8,17 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.VBox;
-import model.Tienda;
-import service.TiendaService;
+import model.Store;
+import service.StoreService;
 
 import java.util.List;
 
 public class StoreSelection {
-    private final TiendaService tiendaService;
-    private ListView<Tienda> listViewTiendas;
+    private final StoreService storeService;
+    private ListView<Store> listViewTiendas;
 
     public StoreSelection() {
-        tiendaService = new TiendaService();
+        storeService = new StoreService();
     }
 
     public Scene getScene() {
@@ -27,7 +27,7 @@ public class StoreSelection {
         listViewTiendas.setPrefHeight(300);
         listViewTiendas.setCellFactory(lv -> new ListCell<>() {
             @Override
-            protected void updateItem(Tienda item, boolean empty) {
+            protected void updateItem(Store item, boolean empty) {
                 super.updateItem(item, empty);
                 setText(empty || item == null ? "" : "ID: " + item.getId() + " - " + item.getNombre());
             }
@@ -36,7 +36,7 @@ public class StoreSelection {
 
         Button btnSeleccionar = new Button("Seleccionar Tienda");
         btnSeleccionar.setOnAction(e -> {
-            Tienda tiendaSeleccionada = listViewTiendas.getSelectionModel().getSelectedItem();
+            Store tiendaSeleccionada = listViewTiendas.getSelectionModel().getSelectedItem();
             if (tiendaSeleccionada != null) {
                 MainApp.setTienda(tiendaSeleccionada);
                 MainApp.mostrarVentanaProductos();
@@ -57,7 +57,7 @@ public class StoreSelection {
     }
 
     private void refreshListView() {
-        List<Tienda> tiendas = tiendaService.getTiendas();
+        List<Store> tiendas = storeService.getTiendas();
         listViewTiendas.getItems().setAll(tiendas);
     }
 

@@ -1,6 +1,6 @@
 package gui;
 
-import model.Tienda;
+import model.Store;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Screen;
@@ -9,7 +9,7 @@ import javafx.geometry.Rectangle2D;
 
 public class MainApp extends Application {
     private static Stage primaryStage;
-    private static Tienda tienda;
+    private static Store tienda;
     private static Scene sceneMenuPrincipal;
     private static Scene sceneProductos;
     private static Scene sceneConfiguracion;
@@ -66,7 +66,7 @@ public class MainApp extends Application {
         primaryStage.show();
     }
 
-    public static void setTienda(Tienda tiendaSeleccionada) {
+    public static void setTienda(Store tiendaSeleccionada) {
         tienda = tiendaSeleccionada;
         // Aquí puedes agregar lógica adicional si es necesario
         VentanaProductos ventanaProductos = new VentanaProductos(tienda);

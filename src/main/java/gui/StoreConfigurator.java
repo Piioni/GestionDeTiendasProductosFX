@@ -6,8 +6,8 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
-import model.Tienda;
-import service.TiendaService;
+import model.Store;
+import service.StoreService;
 
 import java.util.List;
 import java.util.Objects;
@@ -18,11 +18,11 @@ public class StoreConfigurator {
     private TextField txtDireccionConf;
     private TextField txtDescripcionConf;
     private TextField txtBuscar;
-    private final TiendaService tiendaService;
-    private ListView<Tienda> listViewTiendas;
+    private final StoreService storeService;
+    private ListView<Store> listViewTiendas;
 
     public StoreConfigurator() {
-        tiendaService = new TiendaService();
+        storeService = new StoreService();
     }
 
     public Scene getScene() {
@@ -34,7 +34,7 @@ public class StoreConfigurator {
         listViewTiendas.setPrefHeight(300);
         listViewTiendas.setCellFactory(lv -> new ListCell<>() {
             @Override
-            protected void updateItem(Tienda item, boolean empty) {
+            protected void updateItem(Store item, boolean empty) {
                 super.updateItem(item, empty);
                 setText(empty || item == null ? "" : "ID: " + item.getId() + " - " + item.getNombre());
             }
@@ -84,7 +84,7 @@ public class StoreConfigurator {
         Button btnSeleccionarTienda = new Button("Seleccionar Tienda");
         btnSeleccionarTienda.setPrefWidth(BUTTON_WIDTH);
         btnSeleccionarTienda.setOnAction(e -> {
-            Tienda tiendaSeleccionada = listViewTiendas.getSelectionModel().getSelectedItem();
+            Store tiendaSeleccionada = listViewTiendas.getSelectionModel().getSelectedItem();
             if (tiendaSeleccionada != null) {
                 tiendaSeleccionada.setNombre(txtNombreConf.getText().trim());
                 tiendaSeleccionada.setDireccion(txtDireccionConf.getText().trim());
@@ -136,19 +136,19 @@ public class StoreConfigurator {
         return scene;
     }
 
-    private void cargarDetallesTienda(Tienda tienda) {
+    private void cargarDetallesTienda(Store tienda) {
         txtNombreConf.setText(tienda.getNombre());
         txtDireccionConf.setText(tienda.getDireccion());
         txtDescripcionConf.setText(tienda.getDescripcion());
     }
 
     private void guardarCambios() {
-        Tienda tiendaSeleccionada = listViewTiendas.getSelectionModel().getSelectedItem();
+        Store tiendaSeleccionada = listViewTiendas.getSelectionModel().getSelectedItem();
         if (tiendaSeleccionada != null) {
             tiendaSeleccionada.setNombre(txtNombreConf.getText().trim());
             tiendaSeleccionada.setDireccion(txtDireccionConf.getText().trim());
             tiendaSeleccionada.setDescripcion(txtDescripcionConf.getText().trim());
-            tiendaService.update(tiendaSeleccionada);
+            storeService.update(tiendaSeleccionada);
             mostrarAlerta("Cambios guardados correctamente.");
             refreshListView();
         } else {
@@ -164,27 +164,27 @@ public class StoreConfigurator {
             mostrarAlerta("El nombre es obligatorio.");
             return;
         }
-        Tienda nuevaTienda = new Tienda();
+        Store nuevaTienda = new Store();
         nuevaTienda.setNombre(nombre);
         nuevaTienda.setDireccion(direccion);
         nuevaTienda.setDescripcion(descripcion);
-        tiendaService.save(nuevaTienda);
+        storeService.save(nuevaTienda);
         mostrarAlerta("Tienda agregada correctamente.");
         refreshListView();
     }
 
     private void buscarTienda() {
         String termino = txtBuscar.getText().trim().toLowerCase();
-        List<Tienda> tiendasFiltradas = tiendaService.getTiendas().stream()
+        List<Store> tiendasFiltradas = storeService.getTiendas().stream()
                 .filter(t -> t.getNombre().toLowerCase().contains(termino))
                 .collect(Collectors.toList());
         listViewTiendas.getItems().setAll(tiendasFiltradas);
     }
 
     private void eliminarTienda() {
-        Tienda tiendaSeleccionada = listViewTiendas.getSelectionModel().getSelectedItem();
+        Store tiendaSeleccionada = listViewTiendas.getSelectionModel().getSelectedItem();
         if (tiendaSeleccionada != null) {
-            tiendaService.delete(tiendaSeleccionada);
+            storeService.delete(tiendaSeleccionada);
             mostrarAlerta("Tienda eliminada correctamente.");
             refreshListView();
         } else {
@@ -199,7 +199,7 @@ public class StoreConfigurator {
     }
 
     private void refreshListView() {
-        List<Tienda> tiendas = tiendaService.getTiendas();
+        List<Store> tiendas = storeService.getTiendas();
         if (listViewTiendas == null) {
             return;
         }
