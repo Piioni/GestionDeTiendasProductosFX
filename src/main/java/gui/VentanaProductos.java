@@ -302,8 +302,8 @@ public class VentanaProductos {
             return;
         }
         // Verificar que el código no esté duplicado
-        if (productService.getProductById(codigo) != null) {
-            mostrarAlerta("Este producto ya existe.");
+        if (productService.getProductById(codigo, tienda) != null ) {
+            mostrarAlerta("Este producto ya existe en esta tienda.");
             return;
         }
         if (!codigo.matches("[A-Z]{2,3}\\d{1,3}")) {
@@ -323,101 +323,84 @@ public class VentanaProductos {
             return;
         }
         Product p = new Product(codigo, nombre, precio, cantidad, descripcion, categoria);
+        p.setTienda(tienda); // Asignar la tienda al producto
         // Se utiliza update para agregar (merge insert)
-        productService.update(p);
+        productService.add(p);
         mostrarAlerta("Producto agregado correctamente.");
         limpiarCampos();
         mostrarProductos();
 
     }
 
-    private void buscarProducto() {
-        String codigo = txtCodigo.getText();
-        String nombre = txtNombre.getText();
-        String cantidadStr = txtCantidad.getText();
-        String precioStr = txtPrecio.getText();
-        String descripcion = txtDescripcion.getText();
-        String categoria = cbCategoria.getValue();
+   private void buscarProducto() {
+       String codigo = txtCodigo.getText();
+       String nombre = txtNombre.getText();
+       String cantidadStr = txtCantidad.getText();
+       String precioStr = txtPrecio.getText();
+       String descripcion = txtDescripcion.getText();
+       String categoria = cbCategoria.getValue();
 
-        if (codigo.isEmpty() && nombre.isEmpty() && cantidadStr.isEmpty() && precioStr.isEmpty() && descripcion.isEmpty() && categoria == null) {
-            mostrarAlerta("Por favor, llene al menos un campo para buscar.");
-            return;
-        }
+       if (codigo.isEmpty() && nombre.isEmpty() && cantidadStr.isEmpty() && precioStr.isEmpty() && descripcion.isEmpty() && categoria == null) {
+           mostrarAlerta("Por favor, llene al menos un campo para buscar.");
+           return;
+       }
 
-        lista.getItems().clear();
+       lista.getItems().clear();
 
-        boolean encontrado = false; // Variable para saber si se encontró un producto que coincida con los criterios de búsqueda
+       List<Product> productos = productService.getAllProducts(tienda);
+       List<Product> productosFiltrados = new ArrayList<>();
 
-        while (!encontrado) {
+       for (Product p : productos) {
+           boolean match = true;
 
-            // Recorrer la lista de productos
-            for (Product p : tienda) {
-                // Inicializa el match a true
-                boolean match = true;
+           if (!codigo.isEmpty() && !p.getCodigo().trim().equalsIgnoreCase(codigo.trim())) {
+               match = false;
+           }
+           if (!nombre.isEmpty() && !p.getNombre().equalsIgnoreCase(nombre.trim())) {
+               match = false;
+           }
+           if (!cantidadStr.isEmpty()) {
+               try {
+                   int cantidad = Integer.parseInt(cantidadStr);
+                   if (p.getCantidad() != cantidad) {
+                       match = false;
+                   }
+               } catch (NumberFormatException e) {
+                   mostrarAlerta("Cantidad debe ser un valor numérico.");
+                   return;
+               }
+           }
+           if (!precioStr.isEmpty()) {
+               try {
+                   double precio = Double.parseDouble(precioStr);
+                   if (p.getPrecio() != precio) {
+                       match = false;
+                   }
+               } catch (NumberFormatException e) {
+                   mostrarAlerta("Precio debe ser un valor numérico.");
+                   return;
+               }
+           }
+           if (!descripcion.isEmpty() && !p.getDescripcion().trim().equalsIgnoreCase(descripcion.trim())) {
+               match = false;
+           }
+           if (categoria != null && !p.getCategoria().equalsIgnoreCase(categoria)) {
+               match = false;
+           }
 
-                // Verificar si los campos de búsqueda no están vacíos y si coinciden con los valores del producto
-                if (!codigo.isEmpty()) {
-                    if (!p.getCodigo().trim().toLowerCase().contains(codigo.trim().toLowerCase())) {
-                        match = false;
-                    } else if (!p.getCodigo().trim().toUpperCase().contains(codigo.trim().toUpperCase())) {
-                        match = false;
-                    }
+           if (match) {
+               productosFiltrados.add(p);
+           }
+       }
 
-                }
-                if (!nombre.isEmpty() && !p.getNombre().equals(nombre)) match = false;
-                if (!cantidadStr.isEmpty()) {
-                    try {
-                        int cantidad = Integer.parseInt(cantidadStr);
-                        if (p.getCantidad() != cantidad) {
-                            match = false;
-                        }
-                    } catch (NumberFormatException e) {
-                        mostrarAlerta("Cantidad debe ser un valor numérico.");
-                        return;
-                    }
-                }
-                if (!precioStr.isEmpty()) {
-                    try {
-                        double precio = Double.parseDouble(precioStr);
-                        if (p.getPrecio() != precio) {
-                            match = false;
-                        }
-                    } catch (NumberFormatException e) {
-                        mostrarAlerta("Precio debe ser un valor numérico.");
-                        return;
-                    }
-                }
-                if (!descripcion.isEmpty()) {
-                    if (!p.getDescripcion().trim().toLowerCase().contains(descripcion.trim().toLowerCase())) {
-                        match = false;
-                    } else if (!p.getDescripcion().trim().toUpperCase().contains(descripcion.trim().toUpperCase())) {
-                        match = false;
-                    }
-                }
-
-                if (categoria != null && !p.getCategoria().equals(categoria)) {
-                    match = false;
-                }
-
-                if (match) {
-                    txtCodigo.setText(p.getCodigo());
-                    txtNombre.setText(p.getNombre());
-                    txtCantidad.setText(String.valueOf(p.getCantidad()));
-                    txtPrecio.setText(String.valueOf(p.getPrecio()));
-                    txtDescripcion.setText(p.getDescripcion());
-                    cbCategoria.setValue(p.getCategoria());
-                    imprimirProducto(p);
-                    encontrado = true;
-                }
-            }
-
-            if (lista.getItems().isEmpty()) {
-                mostrarAlerta("No se encontraron productos que coincidan con los criterios de búsqueda.");
-                break;
-
-            }
-        }
-    }
+       if (productosFiltrados.isEmpty()) {
+           mostrarAlerta("No se encontraron productos que coincidan con los criterios de búsqueda.");
+       } else {
+           for (Product p : productosFiltrados) {
+               imprimirProducto(p);
+           }
+       }
+   }
 
     private void buscarPorCategoria() {
         String categoria = cbCategoria.getValue();
@@ -426,7 +409,7 @@ public class VentanaProductos {
             return;
         }
         lista.getItems().clear();
-        List<Product> productos = productService.getProductsByCategory(categoria);
+        List<Product> productos = productService.getProductsByCategory(categoria, tienda);
         if (productos != null && !productos.isEmpty()) {
             for (Product p : productos) {
                 lista.getItems().add(p.toString());
@@ -443,7 +426,7 @@ public class VentanaProductos {
             mostrarAlerta("Por favor, ingrese el código del producto a eliminar.");
             return;
         }
-        Product p = productService.getProductById(codigoEscrito);
+        Product p = productService.getProductById(codigoEscrito, tienda);
         if (p != null) {
             // Se asume que getCodigo retorna el identificador usado en delete
             // Nota: revisar la firma de delete en ProductService y ajustar si es necesario
@@ -476,7 +459,7 @@ public class VentanaProductos {
             mostrarAlerta("Cantidad y precio deben ser valores numéricos.");
             return;
         }
-        Product p = productService.getProductById(codigo);
+        Product p = productService.getProductById(codigo, tienda);
         if (p != null) {
             p.setNombre(nombre);
             p.setCantidad(cantidad);
@@ -494,7 +477,7 @@ public class VentanaProductos {
 
     private void mostrarProductos() {
         lista.getItems().clear();
-        List<Product> productos = productService.getAllProducts();
+        List<Product> productos = productService.getAllProducts(tienda);
         List<Product> productosOrdenados = new ArrayList<>(productos);
         Collections.sort(productosOrdenados);
         for (Product p : productosOrdenados) {

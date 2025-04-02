@@ -7,7 +7,7 @@ import jakarta.persistence.*;
 public class Product implements Comparable<Product> {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "codigo", nullable = false)
     private String codigo;
 
     @Column(name = "nombre", nullable = false)
@@ -40,6 +40,14 @@ public class Product implements Comparable<Product> {
 
     public Product() {
 
+    }
+
+    public void setTienda(Store tienda) {
+        this.tienda = tienda;
+    }
+
+    public Store getTienda() {
+        return tienda;
     }
 
     @Override
