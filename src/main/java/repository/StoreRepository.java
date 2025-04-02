@@ -1,9 +1,10 @@
 package repository;
 
-import jakarta.persistence.TypedQuery;
-import jakarta.persistence.EntityManager;
+
 import model.Store;
 
+import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
 import java.util.List;
 import java.util.Optional;
 

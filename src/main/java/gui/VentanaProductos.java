@@ -11,6 +11,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import service.ProductService;
+import service.StoreService;
 
 import java.util.*;
 
@@ -20,6 +21,7 @@ public class VentanaProductos {
     private ListView<String> lista;
     private final Store tienda;
     private final ProductService productService = new ProductService();
+    private final StoreService storeService = new StoreService();
 
 
     public VentanaProductos(Store tienda) {
@@ -321,9 +323,8 @@ public class VentanaProductos {
             return;
         }
         Product p = new Product(codigo, nombre, precio, cantidad, descripcion, categoria);
-        p.setTienda(tienda); // Asignar la tienda al producto
-        // Se utiliza update para agregar (merge insert)
-        productService.add(p);
+        tienda.addProduct(p);
+        storeService.update(tienda);
         mostrarAlerta("Producto agregado correctamente.");
         limpiarCampos();
         mostrarProductos();

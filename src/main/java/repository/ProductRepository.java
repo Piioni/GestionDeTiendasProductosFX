@@ -1,10 +1,11 @@
 package repository;
 
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.TypedQuery;
+
 import model.Product;
 import model.Store;
 
+import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
 import java.util.List;
 
 public class ProductRepository {
@@ -28,7 +29,7 @@ public class ProductRepository {
         Product product = null;
         try {
             product = query.getSingleResult();
-        } catch (jakarta.persistence.NoResultException e) {
+        } catch (Exception e) {
             System.out.println("No se encontró el producto con el ID: " + id + " en la tienda: " + store.getNombre());
         }
         return product;
