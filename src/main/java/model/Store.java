@@ -8,7 +8,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "tienda")
-public class Tienda implements Iterable<Product> {
+public class Store implements Iterable<Product> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,14 +26,14 @@ public class Tienda implements Iterable<Product> {
     @OneToMany(mappedBy = "tienda", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private final List<Product> listaProductos = new ArrayList<>();
 
-    public Tienda(String nombre, String direccion, String descripcion) {
+    public Store(String nombre, String direccion, String descripcion) {
         this.descripcion = descripcion;
         this.direccion = direccion;
         this.nombre = nombre;
 
     }
 
-    public Tienda() {}
+    public Store() {}
 
     @Override
     public Iterator<Product> iterator() {

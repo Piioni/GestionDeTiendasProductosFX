@@ -27,7 +27,7 @@ public class Product implements Comparable<Product> {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "tienda_id", nullable = false)
-    private Tienda tienda;
+    private Store tienda;
 
     public Product(String codigo, String nombre, double precio, int cantidad, String descripcion, String categoria) {
         this.codigo = codigo;
