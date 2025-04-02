@@ -66,7 +66,6 @@ public class ProductService {
         }
     }
 
-
     public List<Product> getAllProducts(Store store) {
         try (EntityManager em = JpaUtil.getEntityManager()) {
             return productRepository.findAll(store, em);
