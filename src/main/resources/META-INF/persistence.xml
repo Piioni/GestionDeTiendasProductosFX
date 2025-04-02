@@ -11,19 +11,3 @@
         </properties>
     </persistence-unit>
 </persistence>
-
-
-        <!--        <?xml version="1.0" encoding="UTF-8"?>-->
-        <!--        <persistence xmlns="https://jakarta.ee/xml/ns/persistence"-->
-        <!--                     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"-->
-        <!--                     xsi:schemaLocation="https://jakarta.ee/xml/ns/persistence https://jakarta.ee/xml/ns/persistence/persistence_3_0.xsd"-->
-        <!--                     version="3.0">-->
-        <!--            <persistence-unit name="jpaUnit" transaction-type="RESOURCE_LOCAL">-->
-        <!--                <provider>com.objectdb.jpa.Provider</provider>-->
-        <!--                <properties>-->
-        <!--                    <property name="jakarta.persistence.jdbc.url" value="objectdb://localhost:6136/jpa.odb"/>-->
-        <!--                    <property name="jakarta.persistence.jdbc.user" value="admin"/>-->
-        <!--                    <property name="jakarta.persistence.jdbc.password" value="admin"/>-->
-        <!--                </properties>-->
-        <!--            </persistence-unit>-->
-        <!--        </persistence>-->
