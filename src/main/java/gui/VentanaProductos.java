@@ -84,7 +84,7 @@ public class VentanaProductos {
         List<String> categorias = new ArrayList<>();
         categorias.add("Fijaciones y conectores");
         categorias.add("Materiales de fabricación");
-        categorias.add("suministros de jardinería");
+        categorias.add("Suministros de jardinería");
         categorias.add("Materiales de construcción");
         categorias.add("Elementos de montaje");
 
@@ -95,8 +95,6 @@ public class VentanaProductos {
         Image imageFind = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Images/find.png")));        ImageView imageViewFind = new ImageView(imageFind);
         imageViewFind.setFitWidth(20);
         imageViewFind.setFitHeight(20);
-
-
 
         // Crear un Region para aumentar la hitbox
         Region hitbox = new Region();
@@ -334,72 +332,30 @@ public class VentanaProductos {
 
    private void buscarProducto() {
        String codigo = txtCodigo.getText();
-       String nombre = txtNombre.getText();
-       String cantidadStr = txtCantidad.getText();
-       String precioStr = txtPrecio.getText();
-       String descripcion = txtDescripcion.getText();
-       String categoria = cbCategoria.getValue();
 
-       if (codigo.isEmpty() && nombre.isEmpty() && cantidadStr.isEmpty() && precioStr.isEmpty() && descripcion.isEmpty() && categoria == null) {
-           mostrarAlerta("Por favor, llene al menos un campo para buscar.");
+       if (codigo.isEmpty()) {
+           mostrarAlerta("Por favor, ingrese un código para buscar.");
            return;
        }
 
        lista.getItems().clear();
 
        List<Product> productos = productService.getAllProducts(tienda);
-       List<Product> productosFiltrados = new ArrayList<>();
 
        for (Product p : productos) {
-           boolean match = true;
-
-           if (!codigo.isEmpty() && !p.getCodigo().trim().equalsIgnoreCase(codigo.trim())) {
-               match = false;
-           }
-           if (!nombre.isEmpty() && !p.getNombre().equalsIgnoreCase(nombre.trim())) {
-               match = false;
-           }
-           if (!cantidadStr.isEmpty()) {
-               try {
-                   int cantidad = Integer.parseInt(cantidadStr);
-                   if (p.getCantidad() != cantidad) {
-                       match = false;
-                   }
-               } catch (NumberFormatException e) {
-                   mostrarAlerta("Cantidad debe ser un valor numérico.");
-                   return;
-               }
-           }
-           if (!precioStr.isEmpty()) {
-               try {
-                   double precio = Double.parseDouble(precioStr);
-                   if (p.getPrecio() != precio) {
-                       match = false;
-                   }
-               } catch (NumberFormatException e) {
-                   mostrarAlerta("Precio debe ser un valor numérico.");
-                   return;
-               }
-           }
-           if (!descripcion.isEmpty() && !p.getDescripcion().trim().equalsIgnoreCase(descripcion.trim())) {
-               match = false;
-           }
-           if (categoria != null && !p.getCategoria().equalsIgnoreCase(categoria)) {
-               match = false;
-           }
-
-           if (match) {
-               productosFiltrados.add(p);
+           if (p.getCodigo().toLowerCase().contains(codigo.toLowerCase().trim())) {
+                // Print and add each product to the list
+                imprimirProducto(p);
+                txtCodigo.setText(p.getCodigo());
+                txtNombre.setText(p.getNombre());
+                txtCantidad.setText(String.valueOf(p.getCantidad()));
+                txtPrecio.setText(String.valueOf(p.getPrecio()));
+                txtDescripcion.setText(p.getDescripcion());
+                cbCategoria.setValue(p.getCategoria());
            }
        }
 
-       if (productosFiltrados.isEmpty()) {
-           mostrarAlerta("No se encontraron productos que coincidan con los criterios de búsqueda.");
-       } else {
-           for (Product p : productosFiltrados) {
-               imprimirProducto(p);
-           }
-       }
+
    }
 
     private void buscarPorCategoria() {
