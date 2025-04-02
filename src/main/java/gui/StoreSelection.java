@@ -7,11 +7,13 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import model.Store;
 import service.StoreService;
 
 import java.util.List;
+import java.util.Objects;
 
 public class StoreSelection {
     private final StoreService storeService;
@@ -45,15 +47,20 @@ public class StoreSelection {
             }
         });
 
-        // Botón para salir al menú principal
         Button btnSalir = new Button("Exit to Main Menu");
         btnSalir.setOnAction(e -> MainApp.mostrarMenuPrincipal());
 
-        VBox layout = new VBox(10, listViewTiendas, btnSeleccionar, btnSalir);
+        HBox buttonLayout = new HBox(10, btnSeleccionar, btnSalir);
+        buttonLayout.setAlignment(Pos.CENTER);
+
+        VBox layout = new VBox(10, listViewTiendas, buttonLayout);
         layout.setPadding(new Insets(20));
         layout.setAlignment(Pos.CENTER);
 
-        return new Scene(layout, 400, 400);
+        Scene scene = new Scene(layout, 400, 400);
+        scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/styles/stylesSelection.css")).toExternalForm());
+
+        return scene;
     }
 
     private void refreshListView() {
