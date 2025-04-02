@@ -4,7 +4,6 @@ import jakarta.persistence.TypedQuery;
 import jakarta.persistence.EntityManager;
 import model.Store;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,10 +28,10 @@ public class StoreRepository {
         try {
             TypedQuery<Store> query = em.createQuery("SELECT t FROM Store t", Store.class);
             List<Store> results = query.getResultList();
-            return results.isEmpty() ? Collections.emptyList() : results;
+            return results.isEmpty() ? List.of() : results;
 
         } catch (Exception e) {
-            return Collections.emptyList();
+            return List.of();
         }
     }
 }
