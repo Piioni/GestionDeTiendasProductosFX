@@ -49,6 +49,4 @@ public class MenuPrincipal {
         scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/styles/stylesMenu.css")).toExternalForm());
         return scene;
     }
-
-
 }
