@@ -20,12 +20,12 @@ public class VentanaProductos {
     private ComboBox<String> cbCategoria;
     private ListView<String> lista;
     private final Store store;
-    private final ProductService productService = new ProductService();
-    private final StoreService storeService = new StoreService();
+    private final ProductController productController ;
 
 
     public VentanaProductos(Store store) {
         this.store = store;
+        this.productController = new ProductController(store);
     }
 
     public Scene getScene() {
@@ -117,7 +117,18 @@ public class VentanaProductos {
         Tooltip.install(stackPane, tooltipFind);
 
         // Buscar productos por categoría al hacer clic en la imagen
-        stackPane.setOnMouseClicked(e -> buscarPorCategoria());
+        stackPane.setOnMouseClicked(e -> {
+            String categoriaSeleccionada = cbCategoria.getValue();
+            if (categoriaSeleccionada != null) {
+                List<Product> productosPorCategoria = productController.buscarPorCategoria(categoriaSeleccionada);
+                lista.getItems().clear();
+                for (Product producto : productosPorCategoria) {
+                    imprimirProducto(producto);
+                }
+            } else {
+                mostrarAlerta("Seleccione una categoría para buscar.");
+            }
+        });
 
         // Crear un HBox para contener el ComboBox y el StackPane
         HBox hBoxCategoria = new HBox(5); // 5 es el espacio entre el ComboBox y el StackPane
@@ -177,15 +188,61 @@ public class VentanaProductos {
         // Creación y estilización de los botones
         Button btnAgregar = new Button("Add product");
         btnAgregar.getStyleClass().add("button");
-        btnAgregar.setOnAction(e -> agregarProducto());
+        btnAgregar.setOnAction(e -> {
+            try {
+                productController.agregarProducto(
+                        txtCodigo.getText(),
+                        txtNombre.getText(),
+                        txtCantidad.getText(),
+                        txtPrecio.getText(),
+                        txtDescripcion.getText(),
+                        cbCategoria.getValue()
+                );
+                mostrarAlerta("Producto agregado correctamente.");
+                limpiarCampos();
+                mostrarProductos();
+            } catch (IllegalArgumentException ex) {
+                mostrarAlerta(ex.getMessage());
+            }
+
+        });
 
         Button btnEliminar = new Button("Delete product");
         btnEliminar.getStyleClass().add("button");
-        btnEliminar.setOnAction(e -> eliminarProducto());
+        btnEliminar.setOnAction(e -> {
+            String codigo = txtCodigo.getText();
+            if (codigo.isEmpty()) {
+                mostrarAlerta("Ingrese el código del producto a eliminar.");
+            } else {
+                try {
+                    productController.eliminarProducto(codigo);
+                    mostrarAlerta("Producto eliminado correctamente.");
+                    limpiarCampos();
+                    mostrarProductos();
+                } catch (IllegalArgumentException ex) {
+                    mostrarAlerta(ex.getMessage());
+                }
+            }
+        });
 
         Button btnBuscar = new Button("Search product");
         btnBuscar.getStyleClass().add("button");
-        btnBuscar.setOnAction(e -> buscarProducto());
+        btnBuscar.setOnAction(e -> {
+            String codigo = txtCodigo.getText();
+            if (codigo.isEmpty()) {
+                mostrarAlerta("Ingrese el código del producto a buscar.");
+            } else {
+                List<String> resultados = productController.buscarProducto(codigo);
+                lista.getItems().clear();
+                if (resultados.isEmpty()) {
+                    mostrarAlerta("No se encontraron productos con ese código.");
+                } else {
+                    for (String resultado : resultados) {
+                        lista.getItems().add(resultado);
+                    }
+                }
+            }
+        });
 
         Button btnModificar = new Button("Update product");
         btnModificar.getStyleClass().add("button");
@@ -283,165 +340,17 @@ public class VentanaProductos {
         Scene scene = new Scene(tal, 870, 780);
         scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/styles/stylesProductos.css")).toExternalForm());
 
-        mostrarProductos();
-
         return scene;
 
-    }
-
-    private void agregarProducto() {
-        String codigo = txtCodigo.getText();
-        String nombre = txtNombre.getText();
-        String cantidadStr = txtCantidad.getText();
-        String precioStr = txtPrecio.getText();
-        String descripcion = txtDescripcion.getText();
-        String categoria = cbCategoria.getValue();
-
-        if (codigo.isEmpty() || nombre.isEmpty() || cantidadStr.isEmpty() || precioStr.isEmpty() || descripcion.isEmpty() || categoria == null) {
-            mostrarAlerta("Todos los campos son obligatorios.");
-            return;
-        }
-        // Verificar que el código no esté duplicado
-        if (productService.getProductById(codigo, store) != null ) {
-            mostrarAlerta("Este producto ya existe en esta tienda.");
-            return;
-        }
-        if (!codigo.matches("[A-Z]{2,3}\\d{1,3}")) {
-            mostrarAlerta("El código debe contener 2 o 3 letras mayúsculas seguidas de 1 número.");
-            return;
-        } else if (codigo.length() < 3 || codigo.length() > 6) {
-            mostrarAlerta("El código debe tener entre 3 y 6 caracteres.");
-            return;
-        }
-        int cantidad;
-        double precio;
-        try {
-            cantidad = Integer.parseInt(cantidadStr);
-            precio = Double.parseDouble(precioStr);
-        } catch (NumberFormatException e) {
-            mostrarAlerta("Cantidad y precio deben ser valores numéricos.");
-            return;
-        }
-        Product p = new Product(codigo, nombre, precio, cantidad, descripcion, categoria);
-
-        store.addProduct(p);
-        storeService.update(store);
-
-        mostrarAlerta("Producto agregado correctamente.");
-        limpiarCampos();
         mostrarProductos();
 
-    }
-
-   private void buscarProducto() {
-       String codigo = txtCodigo.getText();
-
-       if (codigo.isEmpty()) {
-           mostrarAlerta("Por favor, ingrese un código para buscar.");
-           return;
-       }
-
-       lista.getItems().clear();
-
-       List<Product> productos = productService.getAllProducts(store);
-
-       for (Product p : productos) {
-           if (p.getCodigo().toLowerCase().contains(codigo.toLowerCase().trim())) {
-                // Print and add each product to the list
-                imprimirProducto(p);
-                txtCodigo.setText(p.getCodigo());
-                txtNombre.setText(p.getNombre());
-                txtCantidad.setText(String.valueOf(p.getCantidad()));
-                txtPrecio.setText(String.valueOf(p.getPrecio()));
-                txtDescripcion.setText(p.getDescripcion());
-                cbCategoria.setValue(p.getCategoria());
-           }
-       }
-
-
-   }
-
-    private void buscarPorCategoria() {
-        String categoria = cbCategoria.getValue();
-        if (categoria == null) {
-            mostrarAlerta("Seleccione una categoría para buscar.");
-            return;
-        }
-        lista.getItems().clear();
-        List<Product> productos = productService.getProductsByCategory(categoria, store);
-        if (productos != null && !productos.isEmpty()) {
-            for (Product p : productos) {
-                lista.getItems().add(p.toString());
-            }
-        } else {
-            mostrarAlerta("No se encontraron productos en la categoría seleccionada.");
-        }
-    }
-
-    private void eliminarProducto() {
-        // Obtener el codigo de producto escrito
-        String codigoEscrito = txtCodigo.getText();
-        if (codigoEscrito.isEmpty()) {
-            mostrarAlerta("Por favor, ingrese el código del producto a eliminar.");
-            return;
-        }
-        Product p = productService.getProductById(codigoEscrito, store);
-        if (p != null) {
-            store.eliminarProducto(codigoEscrito);
-            storeService.update(store);
-            mostrarAlerta("Producto eliminado correctamente.");
-            limpiarCampos();
-            mostrarProductos();
-        } else {
-            mostrarAlerta("El producto con el código " + codigoEscrito + " no existe.");
-        }
-    }
-
-    private void modificarProducto() {
-        String codigo = txtCodigo.getText();
-        String nombre = txtNombre.getText();
-        String cantidadStr = txtCantidad.getText();
-        String precioStr = txtPrecio.getText();
-        String descripcion = txtDescripcion.getText();
-        String categoria = cbCategoria.getValue();
-        if (codigo.isEmpty() || nombre.isEmpty() || cantidadStr.isEmpty() || precioStr.isEmpty() || descripcion.isEmpty() || categoria == null) {
-            mostrarAlerta("Todos los campos son obligatorios.");
-            return;
-        }
-        int cantidad;
-        double precio;
-        try {
-            cantidad = Integer.parseInt(cantidadStr);
-            precio = Double.parseDouble(precioStr);
-        } catch (NumberFormatException e) {
-            mostrarAlerta("Cantidad y precio deben ser valores numéricos.");
-            return;
-        }
-        Product p = productService.getProductById(codigo, store);
-        if (p != null) {
-            p.setNombre(nombre);
-            p.setCantidad(cantidad);
-            p.setPrecio(precio);
-            p.setDescripcion(descripcion);
-            p.setCategoria(categoria);
-            productService.update(p);
-
-            mostrarAlerta("Producto actualizado correctamente.");
-            limpiarCampos();
-            mostrarProductos();
-        } else {
-            mostrarAlerta("Producto no encontrado.");
-        }
     }
 
     private void mostrarProductos() {
+        List<Product> products = productController.mostrarProductos();
         lista.getItems().clear();
-        List<Product> productos = productService.getAllProducts(store);
-        List<Product> productosOrdenados = new ArrayList<>(productos);
-        Collections.sort(productosOrdenados);
-        for (Product p : productosOrdenados) {
-            // Print and add each product to the list
-            imprimirProducto(p);
+        for (Product producto : products) {
+            imprimirProducto(producto);
         }
     }
 
