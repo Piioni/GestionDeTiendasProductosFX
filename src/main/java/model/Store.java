@@ -35,13 +35,10 @@ public class Store implements Iterable<Product> {
 
     public Store() {}
 
-    @Override
-    public Iterator<Product> iterator() {
-        return listaProductos.iterator();
-    }
 
     public void addProduct(Product p) {
         listaProductos.add(p);
+        p.setTienda(this);
     }
 
     public void eliminarProducto(String codigo) {
@@ -63,12 +60,9 @@ public class Store implements Iterable<Product> {
         return null;
     }
 
-    public List<Product> getProductos() {
-        return listaProductos;
-    }
-
-    public void clear() {
-        listaProductos.clear();
+    @Override
+    public Iterator<Product> iterator() {
+        return listaProductos.iterator();
     }
 
     public int size() {

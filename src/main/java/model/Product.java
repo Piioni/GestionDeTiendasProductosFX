@@ -42,31 +42,21 @@ public class Product implements Comparable<Product> {
 
     }
 
-    public void setTienda(Store tienda) {
-        this.tienda = tienda;
-    }
-
-    public Store getTienda() {
-        return tienda;
-    }
-
     @Override
     public int compareTo(Product o) {
         return this.categoria.compareTo(o.categoria) == 0 ? this.codigo.compareTo(o.codigo) : this.categoria.compareTo(o.categoria);
     }
 
     public String toString() {
-        return  "Código: " + codigo + "\n" +
+        return "Código: " + codigo + "\n" +
                 "Nombre: " + nombre + "\n" +
                 "Precio: " + precio + "\n" +
                 "Cantidad: " + cantidad + "\n" +
                 "Descripción: " + descripcion + "\n" +
                 "Categoría: " + categoria + "\n";
-
     }
 
     // Getters & Setters
-
     public String getCodigo() {
         return codigo;
     }
@@ -109,5 +99,9 @@ public class Product implements Comparable<Product> {
 
     public void setCategoria(String categoria) {
         this.categoria = categoria;
+    }
+
+    public void setTienda(Store tienda) {
+        this.tienda = tienda;
     }
 }

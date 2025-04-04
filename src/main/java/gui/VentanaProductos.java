@@ -19,13 +19,13 @@ public class VentanaProductos {
     private TextField txtCodigo, txtNombre, txtCantidad, txtPrecio, txtDescripcion;
     private ComboBox<String> cbCategoria;
     private ListView<String> lista;
-    private final Store tienda;
+    private final Store store;
     private final ProductService productService = new ProductService();
     private final StoreService storeService = new StoreService();
 
 
-    public VentanaProductos(Store tienda) {
-        this.tienda = tienda;
+    public VentanaProductos(Store store) {
+        this.store = store;
     }
 
     public Scene getScene() {
@@ -146,7 +146,7 @@ public class VentanaProductos {
         panelTitulo.setAlignment(Pos.CENTER);
         panelTitulo.setPadding(new Insets(0, 0, 10, 0));
 
-        Label titulo = new Label(tienda.getNombre());
+        Label titulo = new Label(store.getNombre());
         titulo.getStyleClass().add("titulo");
 
         panelTitulo.getChildren().addAll(titulo);
@@ -302,7 +302,7 @@ public class VentanaProductos {
             return;
         }
         // Verificar que el código no esté duplicado
-        if (productService.getProductById(codigo, tienda) != null ) {
+        if (productService.getProductById(codigo, store) != null ) {
             mostrarAlerta("Este producto ya existe en esta tienda.");
             return;
         }
@@ -323,8 +323,10 @@ public class VentanaProductos {
             return;
         }
         Product p = new Product(codigo, nombre, precio, cantidad, descripcion, categoria);
-        tienda.addProduct(p);
-        storeService.update(tienda);
+
+        store.addProduct(p);
+        storeService.update(store);
+
         mostrarAlerta("Producto agregado correctamente.");
         limpiarCampos();
         mostrarProductos();
@@ -341,7 +343,7 @@ public class VentanaProductos {
 
        lista.getItems().clear();
 
-       List<Product> productos = productService.getAllProducts(tienda);
+       List<Product> productos = productService.getAllProducts(store);
 
        for (Product p : productos) {
            if (p.getCodigo().toLowerCase().contains(codigo.toLowerCase().trim())) {
@@ -366,7 +368,7 @@ public class VentanaProductos {
             return;
         }
         lista.getItems().clear();
-        List<Product> productos = productService.getProductsByCategory(categoria, tienda);
+        List<Product> productos = productService.getProductsByCategory(categoria, store);
         if (productos != null && !productos.isEmpty()) {
             for (Product p : productos) {
                 lista.getItems().add(p.toString());
@@ -383,11 +385,10 @@ public class VentanaProductos {
             mostrarAlerta("Por favor, ingrese el código del producto a eliminar.");
             return;
         }
-        Product p = productService.getProductById(codigoEscrito, tienda);
+        Product p = productService.getProductById(codigoEscrito, store);
         if (p != null) {
-            // Se asume que getCodigo retorna el identificador usado en delete
-            // Nota: revisar la firma de delete en ProductService y ajustar si es necesario
-            productService.delete(p.getCodigo());
+            store.eliminarProducto(codigoEscrito);
+            storeService.update(store);
             mostrarAlerta("Producto eliminado correctamente.");
             limpiarCampos();
             mostrarProductos();
@@ -416,7 +417,7 @@ public class VentanaProductos {
             mostrarAlerta("Cantidad y precio deben ser valores numéricos.");
             return;
         }
-        Product p = productService.getProductById(codigo, tienda);
+        Product p = productService.getProductById(codigo, store);
         if (p != null) {
             p.setNombre(nombre);
             p.setCantidad(cantidad);
@@ -424,6 +425,7 @@ public class VentanaProductos {
             p.setDescripcion(descripcion);
             p.setCategoria(categoria);
             productService.update(p);
+
             mostrarAlerta("Producto actualizado correctamente.");
             limpiarCampos();
             mostrarProductos();
@@ -434,7 +436,7 @@ public class VentanaProductos {
 
     private void mostrarProductos() {
         lista.getItems().clear();
-        List<Product> productos = productService.getAllProducts(tienda);
+        List<Product> productos = productService.getAllProducts(store);
         List<Product> productosOrdenados = new ArrayList<>(productos);
         Collections.sort(productosOrdenados);
         for (Product p : productosOrdenados) {
