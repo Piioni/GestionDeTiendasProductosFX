@@ -24,20 +24,7 @@ public class ProductController {
     public void agregarProducto(String codigo, String nombre, String cantidadStr, String precioStr,
                                 String descripcion, String categoria) {
         // Validaciones y lógica de agregar producto (mismo código que antes)
-        if (codigo.isEmpty() || nombre.isEmpty() || cantidadStr.isEmpty() || precioStr.isEmpty()
-                || descripcion.isEmpty() || categoria == null) {
-            throw new IllegalArgumentException("Todos los campos son obligatorios.");
-        }
-
-        if (productService.getProductById(codigo, store) != null) {
-            throw new IllegalArgumentException("Este producto ya existe en esta tienda.");
-        }
-
-        if (!codigo.matches("[A-Z]{2,3}\\d{1,3}")) {
-            throw new IllegalArgumentException("El código debe contener 2 o 3 letras mayúsculas seguidas de 1 número.");
-        } else if (codigo.length() < 3 || codigo.length() > 6) {
-            throw new IllegalArgumentException("El código debe tener entre 3 y 6 caracteres.");
-        }
+        ComfirmData(codigo, nombre, cantidadStr, precioStr, descripcion, categoria);
 
         int cantidad;
         double precio;
@@ -77,8 +64,45 @@ public class ProductController {
 
     public void modificarProducto(String codigo, String nombre, String cantidadStr,
                                   String precioStr, String descripcion, String categoria) {
-        // Validaciones y lógica de modificación (similar a agregar)
-        // ...
+        ComfirmData(codigo, nombre, cantidadStr, precioStr, descripcion, categoria);
+        Product p = productService.getProductById(codigo, store);
+        if (p != null) {
+            int cantidad;
+            double precio;
+            try {
+                cantidad = Integer.parseInt(cantidadStr);
+                precio = Double.parseDouble(precioStr);
+            } catch (NumberFormatException e) {
+                throw new IllegalArgumentException("Cantidad y precio deben ser valores numéricos.");
+            }
+
+            p.setNombre(nombre);
+            p.setPrecio(precio);
+            p.setCantidad(cantidad);
+            p.setDescripcion(descripcion);
+            p.setCategoria(categoria);
+
+            storeService.update(store);
+        } else {
+            throw new IllegalArgumentException("El producto con el código " + codigo + " no existe.");
+        }
+    }
+
+    private void ComfirmData(String codigo, String nombre, String cantidadStr, String precioStr, String descripcion, String categoria) {
+        if (codigo.isEmpty() || nombre.isEmpty() || cantidadStr.isEmpty() || precioStr.isEmpty()
+                || descripcion.isEmpty() || categoria == null) {
+            throw new IllegalArgumentException("Todos los campos son obligatorios.");
+        }
+
+        if (productService.getProductById(codigo, store) != null) {
+            throw new IllegalArgumentException("Este producto ya existe en esta tienda.");
+        }
+
+        if (!codigo.matches("[A-Z]{2,3}\\d{1,3}")) {
+            throw new IllegalArgumentException("El código debe contener 2 o 3 letras mayúsculas seguidas de 1 número.");
+        } else if (codigo.length() < 3 || codigo.length() > 6) {
+            throw new IllegalArgumentException("El código debe tener entre 3 y 6 caracteres.");
+        }
     }
 
     public List<Product> mostrarProductos() {

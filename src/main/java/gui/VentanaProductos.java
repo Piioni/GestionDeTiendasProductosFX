@@ -232,13 +232,13 @@ public class VentanaProductos {
             if (codigo.isEmpty()) {
                 mostrarAlerta("Ingrese el código del producto a buscar.");
             } else {
-                List<String> resultados = productController.buscarProducto(codigo);
+                List<Product> resultados = productController.buscarProducto(codigo);
                 lista.getItems().clear();
                 if (resultados.isEmpty()) {
                     mostrarAlerta("No se encontraron productos con ese código.");
                 } else {
-                    for (String resultado : resultados) {
-                        lista.getItems().add(resultado);
+                    for (Product producto : resultados) {
+                        imprimirProducto(producto);
                     }
                 }
             }
@@ -246,7 +246,23 @@ public class VentanaProductos {
 
         Button btnModificar = new Button("Update product");
         btnModificar.getStyleClass().add("button");
-        btnModificar.setOnAction(e -> modificarProducto());
+        btnModificar.setOnAction(e -> {
+            try {
+                productController.modificarProducto(
+                        txtCodigo.getText(),
+                        txtNombre.getText(),
+                        txtCantidad.getText(),
+                        txtPrecio.getText(),
+                        txtDescripcion.getText(),
+                        cbCategoria.getValue()
+                );
+                mostrarAlerta("Producto modificado correctamente.");
+                limpiarCampos();
+                mostrarProductos();
+            } catch (IllegalArgumentException ex) {
+                mostrarAlerta(ex.getMessage());
+            }
+        });
 
         Button btnLimpiar = new Button("Clean fields");
         btnLimpiar.getStyleClass().add("button");
@@ -340,9 +356,9 @@ public class VentanaProductos {
         Scene scene = new Scene(tal, 870, 780);
         scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/styles/stylesProductos.css")).toExternalForm());
 
+        mostrarProductos();
         return scene;
 
-        mostrarProductos();
 
     }
 
