@@ -35,7 +35,6 @@ public class Store implements Iterable<Product> {
 
     public Store() {}
 
-
     public void addProduct(Product p) {
         listaProductos.add(p);
         p.setTienda(this);

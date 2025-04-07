@@ -1,5 +1,6 @@
 package gui;
 
+import controller.ProductController;
 import model.Product;
 import model.Store;
 import javafx.geometry.Insets;
@@ -239,7 +240,7 @@ public class VentanaProductos {
                         imprimirProducto(producto);
                     }
                     // Rellenar los TextField con los datos del primer producto encontrado
-                    Product productoEncontrado = resultados.get(0);
+                    Product productoEncontrado = resultados.getFirst();
                     txtCodigo.setText(productoEncontrado.getCodigo());
                     txtNombre.setText(productoEncontrado.getNombre());
                     txtCantidad.setText(String.valueOf(productoEncontrado.getCantidad()));
