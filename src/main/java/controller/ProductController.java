@@ -1,4 +1,4 @@
-package gui;
+package controller;
 
 import model.Product;
 import model.Store;

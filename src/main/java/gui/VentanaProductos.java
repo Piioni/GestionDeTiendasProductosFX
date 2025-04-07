@@ -1,5 +1,6 @@
 package gui;
 
+import controller.ProductController;
 import model.Product;
 import model.Store;
 import javafx.geometry.Insets;
