@@ -10,8 +10,6 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
-import service.ProductService;
-import service.StoreService;
 
 import java.util.*;
 

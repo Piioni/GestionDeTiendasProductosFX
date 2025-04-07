@@ -61,26 +61,6 @@ public class Product implements Comparable<Product> {
         return codigo;
     }
 
-    public String getNombre() {
-        return nombre;
-    }
-
-    public double getPrecio() {
-        return precio;
-    }
-
-    public int getCantidad() {
-        return cantidad;
-    }
-
-    public String getDescripcion() {
-        return descripcion;
-    }
-
-    public String getCategoria() {
-        return categoria;
-    }
-
     public void setNombre(String nombre) {
         this.nombre = nombre;
     }

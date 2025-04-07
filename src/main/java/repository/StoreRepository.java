@@ -19,7 +19,7 @@ public class StoreRepository {
 
             // Manejo seguro de resultados
             List<Store> results = query.getResultList();
-            return results.isEmpty() ? Optional.empty() : Optional.of(results.get(0));
+            return results.isEmpty() ? Optional.empty() : Optional.of(results.getFirst());
         } catch (Exception e) {
             return Optional.empty();
         }
