@@ -203,7 +203,6 @@ public class VentanaProductos {
             } catch (IllegalArgumentException ex) {
                 mostrarAlerta(ex.getMessage());
             }
-
         });
 
         Button btnEliminar = new Button("Delete product");
@@ -240,7 +239,7 @@ public class VentanaProductos {
                         imprimirProducto(producto);
                     }
                     // Rellenar los TextField con los datos del primer producto encontrado
-                    Product productoEncontrado = resultados.getFirst();
+                    Product productoEncontrado = resultados.get(0);
                     txtCodigo.setText(productoEncontrado.getCodigo());
                     txtNombre.setText(productoEncontrado.getNombre());
                     txtCantidad.setText(String.valueOf(productoEncontrado.getCantidad()));

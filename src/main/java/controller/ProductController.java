@@ -22,8 +22,7 @@ public class ProductController {
 
     public void agregarProducto(String codigo, String nombre, String cantidadStr, String precioStr,
                                 String descripcion, String categoria) {
-        // Validaciones y lógica de agregar producto (mismo código que antes)
-        ComfirmData(codigo, nombre, cantidadStr, precioStr, descripcion, categoria);
+        ComfirmData(codigo, nombre, cantidadStr, precioStr, descripcion, categoria, false);
 
         int cantidad;
         double precio;
@@ -37,6 +36,34 @@ public class ProductController {
         Product p = new Product(codigo, nombre, precio, cantidad, descripcion, categoria);
         store.addProduct(p);
         storeService.update(store);
+    }
+
+
+    public void modificarProducto(String codigo, String nombre, String cantidadStr,
+                                  String precioStr, String descripcion, String categoria) {
+        ComfirmData(codigo, nombre, cantidadStr, precioStr, descripcion, categoria, true);
+
+        Product p = productService.getProductById(codigo, store);
+        if (p != null) {
+            int cantidad;
+            double precio;
+            try {
+                cantidad = Integer.parseInt(cantidadStr);
+                precio = Double.parseDouble(precioStr);
+            } catch (NumberFormatException e) {
+                throw new IllegalArgumentException("Cantidad y precio deben ser valores numéricos.");
+            }
+
+            p.setNombre(nombre);
+            p.setPrecio(precio);
+            p.setCantidad(cantidad);
+            p.setDescripcion(descripcion);
+            p.setCategoria(categoria);
+
+            storeService.update(store);
+        } else {
+            throw new IllegalArgumentException("El producto con el código " + codigo + " no existe.");
+        }
     }
 
     public List<Product> buscarProducto(String codigo) {
@@ -62,39 +89,15 @@ public class ProductController {
         }
     }
 
-    public void modificarProducto(String codigo, String nombre, String cantidadStr,
-                                  String precioStr, String descripcion, String categoria) {
-        ComfirmData(codigo, nombre, cantidadStr, precioStr, descripcion, categoria);
-        Product p = productService.getProductById(codigo, store);
-        if (p != null) {
-            int cantidad;
-            double precio;
-            try {
-                cantidad = Integer.parseInt(cantidadStr);
-                precio = Double.parseDouble(precioStr);
-            } catch (NumberFormatException e) {
-                throw new IllegalArgumentException("Cantidad y precio deben ser valores numéricos.");
-            }
-
-            p.setNombre(nombre);
-            p.setPrecio(precio);
-            p.setCantidad(cantidad);
-            p.setDescripcion(descripcion);
-            p.setCategoria(categoria);
-
-            storeService.update(store);
-        } else {
-            throw new IllegalArgumentException("El producto con el código " + codigo + " no existe.");
-        }
-    }
-
-    private void ComfirmData(String codigo, String nombre, String cantidadStr, String precioStr, String descripcion, String categoria) {
+    private void ComfirmData(String codigo, String nombre, String cantidadStr, String precioStr,
+                             String descripcion, String categoria, boolean isUpdate) {
         if (codigo.isEmpty() || nombre.isEmpty() || cantidadStr.isEmpty() || precioStr.isEmpty()
                 || descripcion.isEmpty() || categoria == null) {
             throw new IllegalArgumentException("Todos los campos son obligatorios.");
         }
 
-        if (productService.getProductById(codigo, store) != null) {
+        // Solo valida si el producto ya existe en caso de agregar, no de modificar
+        if (!isUpdate && productService.getProductById(codigo, store) != null) {
             throw new IllegalArgumentException("Este producto ya existe en esta tienda.");
         }
 
@@ -112,3 +115,4 @@ public class ProductController {
         return productos;
     }
 }
+
