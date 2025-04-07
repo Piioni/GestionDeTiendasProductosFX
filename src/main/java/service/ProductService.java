@@ -1,11 +1,10 @@
 package service;
 
+import jakarta.persistence.EntityManager;
 import model.Product;
 import model.Store;
 import repository.ProductRepository;
 import util.JpaUtil;
-
-import javax.persistence.EntityManager;
 import java.util.List;
 
 public class ProductService {
@@ -35,29 +34,20 @@ public class ProductService {
     }
 
     public List<Product> getAllProducts(Store store) {
-        EntityManager em = JpaUtil.getEntityManager();
-        try {
+        try (EntityManager em = JpaUtil.getEntityManager()) {
             return productRepository.findAll(store, em);
-        } finally {
-            em.close();
         }
     }
 
     public Product getProductById(String id, Store store) {
-        EntityManager em = JpaUtil.getEntityManager();
-        try {
+        try (EntityManager em = JpaUtil.getEntityManager()) {
             return productRepository.findById(id, store, em);
-        } finally {
-            em.close();
         }
     }
 
     public List<Product> getProductsByCategory(String category, Store store) {
-        EntityManager em = JpaUtil.getEntityManager();
-        try {
+        try (EntityManager em = JpaUtil.getEntityManager()) {
             return productRepository.findByCategory(category, store, em);
-        } finally {
-            em.close();
         }
     }
 

@@ -1,9 +1,9 @@
 package service;
 
+import jakarta.persistence.EntityManager;
 import model.Store;
 import repository.StoreRepository;
 import util.JpaUtil;
-import javax.persistence.EntityManager;
 import java.util.List;
 
 public class StoreService {
@@ -66,11 +66,8 @@ public class StoreService {
 
 
     public List<Store> getTiendas() {
-        EntityManager em = JpaUtil.getEntityManager();
-        try {
+        try (EntityManager em = JpaUtil.getEntityManager()) {
             return storeRepository.findAll(em);
-        } finally {
-            em.close();
         }
     }
 
