@@ -88,7 +88,8 @@ public class ProductController {
         }
     }
 
-    private void ComfirmData(String codigo, String nombre, String cantidadStr, String precioStr, String descripcion, String categoria) {
+    private void ComfirmData(String codigo, String nombre, String cantidadStr, String precioStr, String descripcion,
+                             String categoria) {
         if (codigo.isEmpty() || nombre.isEmpty() || cantidadStr.isEmpty() || precioStr.isEmpty()
                 || descripcion.isEmpty() || categoria == null) {
             throw new IllegalArgumentException("Todos los campos son obligatorios.");
@@ -112,3 +113,4 @@ public class ProductController {
         return productos;
     }
 }
+
