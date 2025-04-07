@@ -238,6 +238,14 @@ public class VentanaProductos {
                     for (Product producto : resultados) {
                         imprimirProducto(producto);
                     }
+                    // Rellenar los TextField con los datos del primer producto encontrado
+                    Product productoEncontrado = resultados.get(0);
+                    txtCodigo.setText(productoEncontrado.getCodigo());
+                    txtNombre.setText(productoEncontrado.getNombre());
+                    txtCantidad.setText(String.valueOf(productoEncontrado.getCantidad()));
+                    txtPrecio.setText(String.valueOf(productoEncontrado.getPrecio()));
+                    txtDescripcion.setText(productoEncontrado.getDescripcion());
+                    cbCategoria.setValue(productoEncontrado.getCategoria());
                 }
             }
         });

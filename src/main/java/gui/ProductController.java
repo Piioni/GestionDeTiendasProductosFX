@@ -55,6 +55,7 @@ public class ProductController {
         if (p != null) {
             store.eliminarProducto(codigo);
             storeService.update(store);
+            productService.removeProduct(p, store);
         } else {
 
             throw new IllegalArgumentException("El producto con el código " + codigo + " no existe.");
