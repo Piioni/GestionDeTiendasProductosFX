@@ -1,14 +1,35 @@
-package Classes;
+package model;
 
-public class Producto implements Comparable<Producto> {
-    private final String codigo;
+import jakarta.persistence.*;
+
+@Entity
+@Table(name = "product")
+public class Product implements Comparable<Product> {
+
+    @Id
+    @Column(name = "codigo", nullable = false)
+    private String codigo;
+
+    @Column(name = "nombre", nullable = false)
     private String nombre;
+
+    @Column(name = "precio", nullable = false)
     private double precio;
+
+    @Column(name = "cantidad", nullable = false)
     private int cantidad;
+
+    @Column(name = "descripcion", nullable = false)
     private String descripcion;
+
+    @Column(name = "categoria", nullable = false)
     private String categoria;
 
-    public Producto(String codigo, String nombre, double precio, int cantidad, String descripcion, String categoria) {
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "tienda_id", nullable = false)
+    private Store tienda;
+
+    public Product(String codigo, String nombre, double precio, int cantidad, String descripcion, String categoria) {
         this.codigo = codigo;
         this.nombre = nombre;
         this.precio = precio;
@@ -17,45 +38,27 @@ public class Producto implements Comparable<Producto> {
         this.categoria = categoria;
     }
 
+    public Product() {
+
+    }
+
     @Override
-    public int compareTo(Producto o) {
+    public int compareTo(Product o) {
         return this.categoria.compareTo(o.categoria) == 0 ? this.codigo.compareTo(o.codigo) : this.categoria.compareTo(o.categoria);
     }
 
     public String toString() {
-        return  "Código: " + codigo + "\n" +
+        return "Código: " + codigo + "\n" +
                 "Nombre: " + nombre + "\n" +
                 "Precio: " + precio + "\n" +
                 "Cantidad: " + cantidad + "\n" +
                 "Descripción: " + descripcion + "\n" +
                 "Categoría: " + categoria + "\n";
-
     }
 
     // Getters & Setters
-
     public String getCodigo() {
         return codigo;
-    }
-
-    public String getNombre() {
-        return nombre;
-    }
-
-    public double getPrecio() {
-        return precio;
-    }
-
-    public int getCantidad() {
-        return cantidad;
-    }
-
-    public String getDescripcion() {
-        return descripcion;
-    }
-
-    public String getCategoria() {
-        return categoria;
     }
 
     public void setNombre(String nombre) {
@@ -76,5 +79,9 @@ public class Producto implements Comparable<Producto> {
 
     public void setCategoria(String categoria) {
         this.categoria = categoria;
+    }
+
+    public void setTienda(Store tienda) {
+        this.tienda = tienda;
     }
 }
