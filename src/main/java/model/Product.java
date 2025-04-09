@@ -84,4 +84,24 @@ public class Product implements Comparable<Product> {
     public void setTienda(Store tienda) {
         this.tienda = tienda;
     }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public double getPrecio() {
+        return precio;
+    }
+
+    public int getCantidad() {
+        return cantidad;
+    }
+
+    public String getDescripcion() {
+        return descripcion;
+    }
+
+    public String getCategoria() {
+        return categoria;
+    }
 }

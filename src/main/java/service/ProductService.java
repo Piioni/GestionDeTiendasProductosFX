@@ -33,6 +33,24 @@ public class ProductService {
         }
     }
 
+    public void removeProduct(Product product, Store store) {
+        EntityManager em = JpaUtil.getEntityManager();
+        try {
+            em.getTransaction().begin();
+            Product p = em.find(Product.class, product.getCodigo());
+            if (p != null) {
+                store.eliminarProducto(product.getCodigo());
+                em.remove(p);
+            }
+            em.getTransaction().commit();
+        } catch (Exception e) {
+            em.getTransaction().rollback();
+            throw e;
+        } finally {
+            em.close();
+        }
+    }
+
     public List<Product> getAllProducts(Store store) {
         try (EntityManager em = JpaUtil.getEntityManager()) {
             return productRepository.findAll(store, em);
