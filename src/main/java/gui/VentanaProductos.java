@@ -203,7 +203,6 @@ public class VentanaProductos {
             } catch (IllegalArgumentException ex) {
                 mostrarAlerta(ex.getMessage());
             }
-
         });
 
         Button btnEliminar = new Button("Delete product");
@@ -217,7 +216,7 @@ public class VentanaProductos {
                     productController.eliminarProducto(codigo);
                     mostrarAlerta("Producto eliminado correctamente.");
                     limpiarCampos();
-                    mostrarProductos();
+                    mostrarProductos(); // Actualizar la lista
                 } catch (IllegalArgumentException ex) {
                     mostrarAlerta(ex.getMessage());
                 }
@@ -239,6 +238,14 @@ public class VentanaProductos {
                     for (Product producto : resultados) {
                         imprimirProducto(producto);
                     }
+                    // Rellenar los TextField con los datos del primer producto encontrado
+                    Product productoEncontrado = resultados.getFirst();
+                    txtCodigo.setText(productoEncontrado.getCodigo());
+                    txtNombre.setText(productoEncontrado.getNombre());
+                    txtCantidad.setText(String.valueOf(productoEncontrado.getCantidad()));
+                    txtPrecio.setText(String.valueOf(productoEncontrado.getPrecio()));
+                    txtDescripcion.setText(productoEncontrado.getDescripcion());
+                    cbCategoria.setValue(productoEncontrado.getCategoria());
                 }
             }
         });

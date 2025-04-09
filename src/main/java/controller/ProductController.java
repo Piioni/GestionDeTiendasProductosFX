@@ -22,8 +22,7 @@ public class ProductController {
 
     public void agregarProducto(String codigo, String nombre, String cantidadStr, String precioStr,
                                 String descripcion, String categoria) {
-        // Validaciones y lógica de agregar producto (mismo código que antes)
-        ComfirmData(codigo, nombre, cantidadStr, precioStr, descripcion, categoria);
+        ComfirmData(codigo, nombre, cantidadStr, precioStr, descripcion, categoria, false);
 
         int cantidad;
         double precio;
@@ -39,31 +38,11 @@ public class ProductController {
         storeService.update(store);
     }
 
-    public List<Product> buscarProducto(String codigo) {
-        return productService.getAllProducts(store).stream()
-                .filter(p -> p.getCodigo().toLowerCase().contains(codigo.toLowerCase().trim()))
-                .collect(Collectors.toList());
-
-    }
-
-    public List<Product> buscarPorCategoria(String categoria) {
-        return productService.getProductsByCategory(categoria, store);
-    }
-
-    public void eliminarProducto(String codigo) {
-        Product p = productService.getProductById(codigo, store);
-        if (p != null) {
-            store.eliminarProducto(codigo);
-            storeService.update(store);
-        } else {
-
-            throw new IllegalArgumentException("El producto con el código " + codigo + " no existe.");
-        }
-    }
 
     public void modificarProducto(String codigo, String nombre, String cantidadStr,
                                   String precioStr, String descripcion, String categoria) {
-        ComfirmData(codigo, nombre, cantidadStr, precioStr, descripcion, categoria);
+        ComfirmData(codigo, nombre, cantidadStr, precioStr, descripcion, categoria, true);
+
         Product p = productService.getProductById(codigo, store);
         if (p != null) {
             int cantidad;
@@ -87,13 +66,37 @@ public class ProductController {
         }
     }
 
-    private void ComfirmData(String codigo, String nombre, String cantidadStr, String precioStr, String descripcion, String categoria) {
+    public List<Product> buscarProducto(String codigo) {
+        return productService.getAllProducts(store).stream()
+                .filter(p -> p.getCodigo().toLowerCase().contains(codigo.toLowerCase().trim()))
+                .collect(Collectors.toList());
+
+    }
+
+    public List<Product> buscarPorCategoria(String categoria) {
+        return productService.getProductsByCategory(categoria, store);
+    }
+
+   public void eliminarProducto(String codigo) {
+       Product p = productService.getProductById(codigo, store);
+       if (p != null) {
+           store.eliminarProducto(codigo); // Eliminar de la tienda
+           productService.removeProduct(p, store); // Eliminar de la base de datos
+           storeService.update(store); // Actualizar la tienda
+       } else {
+           throw new IllegalArgumentException("El producto con el código " + codigo + " no existe.");
+       }
+    }
+
+    private void ComfirmData(String codigo, String nombre, String cantidadStr, String precioStr,
+                             String descripcion, String categoria, boolean isUpdate) {
         if (codigo.isEmpty() || nombre.isEmpty() || cantidadStr.isEmpty() || precioStr.isEmpty()
                 || descripcion.isEmpty() || categoria == null) {
             throw new IllegalArgumentException("Todos los campos son obligatorios.");
         }
 
-        if (productService.getProductById(codigo, store) != null) {
+        // Solo valida si el producto ya existe en caso de agregar, no de modificar
+        if (!isUpdate && productService.getProductById(codigo, store) != null) {
             throw new IllegalArgumentException("Este producto ya existe en esta tienda.");
         }
 

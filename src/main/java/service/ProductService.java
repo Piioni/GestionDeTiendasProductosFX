@@ -5,6 +5,7 @@ import model.Product;
 import model.Store;
 import repository.ProductRepository;
 import util.JpaUtil;
+
 import java.util.List;
 
 public class ProductService {
@@ -37,15 +38,20 @@ public class ProductService {
         EntityManager em = JpaUtil.getEntityManager();
         try {
             em.getTransaction().begin();
+            // Buscar el producto en la base de datos
             Product p = em.find(Product.class, product.getCodigo());
             if (p != null) {
+                // Eliminar el producto de la tienda
                 store.eliminarProducto(product.getCodigo());
+                // Eliminar el producto de la base de datos
                 em.remove(p);
+            } else {
+                throw new IllegalArgumentException("El producto con el código " + product.getCodigo() + " no existe en la base de datos.");
             }
             em.getTransaction().commit();
         } catch (Exception e) {
             em.getTransaction().rollback();
-            throw e;
+            throw new RuntimeException("Error al eliminar el producto: " + e.getMessage(), e);
         } finally {
             em.close();
         }

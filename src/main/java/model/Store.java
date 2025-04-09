@@ -23,7 +23,7 @@ public class Store implements Iterable<Product> {
     @Column(name = "descripcion", nullable = false)
     private String descripcion;
 
-    @OneToMany(mappedBy = "tienda", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "tienda", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private final List<Product> listaProductos = new ArrayList<>();
 
     public Store(String nombre, String direccion, String descripcion) {
